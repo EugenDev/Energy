@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using Energy.UI.Controls;
+using Energy.UI.Controls.WorkArea;
 using Energy.UI.Serialization;
 using Energy.UI.Windows;
 using Microsoft.Win32;
@@ -23,10 +24,15 @@ namespace Energy.UI
             get { return (TaskModel) DataContext; }
             set { DataContext = value; }
         }
+
+        private readonly WorkArea _workArea;
         
         public MainWindow()
         {
             InitializeComponent();
+            _workArea = new WorkArea(MainCanvas);
+            PreviewKeyUp += _workArea.ProcessKeyUp;
+            PreviewKeyDown += _workArea.ProcessKeyDown;
             TaskModel = new TaskModel();
         }
 
@@ -214,7 +220,12 @@ namespace Energy.UI
 
         private void AddStationOnCanvas_OnClick(object sender, RoutedEventArgs e)
         {
-            MainCanvas.Children.Add(new Station("Станция 1"));
+            _workArea.AddElement(ElementType.Station);
+        }
+
+        private void TestMenuItem_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(this, "Ничего не произошло");
         }
     }
 }

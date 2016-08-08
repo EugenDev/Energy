@@ -55,12 +55,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\BooleanToVisibilityConverter.cs" />
     <Compile Include="Controls\Connection.xaml.cs">
       <DependentUpon>Connection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ControlBase.cs" />
+    <Compile Include="Controls\ISelectable.cs" />
     <Compile Include="Controls\Station.xaml.cs">
       <DependentUpon>Station.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\WorkArea\DragMode.cs" />
+    <Compile Include="Controls\WorkArea\MultiselectMode.cs" />
+    <Compile Include="Controls\WorkArea\StartMode.cs" />
+    <Compile Include="Controls\WorkArea\WorkAreaModeBase.cs" />
+    <Compile Include="ElementType.cs" />
+    <Compile Include="IControl.cs" />
     <Compile Include="Serialization\TaskModelExporter.cs" />
     <Compile Include="Serialization\TaskModelImporter.cs" />
     <Compile Include="TaskModel.cs" />
@@ -68,6 +77,7 @@
     <Compile Include="Windows\NameRequestWindow.xaml.cs">
       <DependentUpon>NameRequestWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\WorkArea\WorkArea.cs" />
     <Page Include="Controls\Connection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -125,6 +135,9 @@
       <Project>{5ac2e598-5440-4a74-983c-bdaca31a4304}</Project>
       <Name>Start</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

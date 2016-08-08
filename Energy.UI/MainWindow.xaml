@@ -49,6 +49,7 @@
             </MenuItem>
             <MenuItem Header="Тест">
                 <MenuItem Name="GenerateDataMenuItem"  Header="Сгенерировать данные" Click="GenerateDataMenuItem_OnClick"/>
+                <MenuItem Name="TestMenuItem" Header="Просто тест" Click="TestMenuItem_OnClickestMenuItem_OnClick" />
             </MenuItem>
         </Menu>
 

@@ -1,0 +1,50 @@
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+
+namespace Energy.UI.Controls.WorkArea
+{
+    public abstract class WorkAreaModeBase
+    {
+        protected readonly WorkArea WorkArea;
+        protected Canvas Canvas => WorkArea.Canvas;
+
+        protected Point GetCurrentPoint()
+        {
+            return Mouse.GetPosition(Canvas);
+        }
+
+        protected WorkAreaModeBase(WorkArea workArea)
+        {
+            WorkArea = workArea;
+        }
+
+        protected void HitTest()
+        {
+            var canvasHitPoint = Mouse.GetPosition(Canvas);
+            VisualTreeHelper.HitTest(Canvas,
+                null,
+                result =>
+                {
+                    if (!(result.VisualHit is ControlBase))
+                        return HitTestResultBehavior.Continue;
+                    ProcessHitTest(result.VisualHit as ControlBase);
+                    return HitTestResultBehavior.Stop;
+                },
+                new PointHitTestParameters(canvasHitPoint));
+        }
+
+        protected virtual void ProcessHitTest(ControlBase hitElement) { }
+
+        public virtual void ProcessKeyUp(KeyEventArgs args) { }
+
+        public virtual void ProcessKeyDown(KeyEventArgs args) { }
+
+        public virtual void MouseLeftButtonUp() { }
+
+        public virtual void MouseLeftButtonDown() { }
+
+        public virtual void Cleanup() { }
+    }
+}
