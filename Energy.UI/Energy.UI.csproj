@@ -55,7 +55,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Connection.xaml.cs">
+      <DependentUpon>Connection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Station.xaml.cs">
+      <DependentUpon>Station.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Serialization\TaskModelExporter.cs" />
+    <Compile Include="Serialization\TaskModelImporter.cs" />
     <Compile Include="TaskModel.cs" />
+    <Compile Include="TaskModelGenerator.cs" />
+    <Compile Include="Windows\NameRequestWindow.xaml.cs">
+      <DependentUpon>NameRequestWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Controls\Connection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Station.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -68,6 +88,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\NameRequestWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -95,6 +119,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Start\Start.csproj">
+      <Project>{5ac2e598-5440-4a74-983c-bdaca31a4304}</Project>
+      <Name>Start</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
