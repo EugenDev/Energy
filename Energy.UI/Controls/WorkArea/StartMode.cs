@@ -30,12 +30,12 @@ namespace Energy.UI.Controls.WorkArea
         {
             if(!(element is ISelectable))
                 return;
-
-            var elementHitPoint = Mouse.GetPosition(element);
+            
             var selectedElements = WorkArea.SelectedControls.Count != 0
                 ? WorkArea.SelectedControls.Cast<ControlBase>().ToList()
                 : new List<ControlBase> {element };
-            WorkArea.SetMode(new DragMode(WorkArea, GetCurrentPoint(), selectedElements));
+
+            WorkArea.SetMode(new DragMode(WorkArea, selectedElements));
         }
     }
 }

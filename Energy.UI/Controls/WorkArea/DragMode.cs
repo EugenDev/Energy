@@ -8,10 +8,12 @@ namespace Energy.UI.Controls.WorkArea
     {
         private readonly Point _startPoint;
         private readonly List<ControlBase> _controls;
+        private Vector _previousVector;
 
-        public DragMode(WorkArea workArea, Point startPoint, List<ControlBase> controls) : base(workArea)
+        public DragMode(WorkArea workArea, List<ControlBase> controls) : base(workArea)
         {
-            _startPoint = startPoint;
+            _startPoint = GetCurrentPoint();
+            _previousVector = new Vector();
             _controls = controls;
             Canvas.MouseMove += MouseMoveHandler;
         }
@@ -19,17 +21,20 @@ namespace Energy.UI.Controls.WorkArea
         private void MouseMoveHandler(object sender, MouseEventArgs mouseEventArgs)
         {
             var mousePosition = GetCurrentPoint();
+            var newVector = new Vector(mousePosition.X - _startPoint.X, mousePosition.Y - _startPoint.Y);
+            var result = newVector - _previousVector;
             foreach (var control in _controls)
             {
-                control.Y += mousePosition.Y - _startPoint.Y;
-                control.X += mousePosition.X - _startPoint.X;
+                control.Y += result.Y;
+                control.X += result.X;
             }
+            _previousVector = newVector;
         }
 
         public override void MouseLeftButtonUp()
         {
             Canvas.MouseMove -= MouseMoveHandler;
-            WorkArea.SetMode(new StartMode(WorkArea));
+            WorkArea.SetStartMode();
         }
     }
 }

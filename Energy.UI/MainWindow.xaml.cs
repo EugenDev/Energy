@@ -223,12 +223,24 @@ namespace Energy.UI
             _workArea.AddElement(ElementType.Station);
         }
 
+        private void AddConsumerOnCanvas_OnClick(object sender, RoutedEventArgs e)
+        {
+            _workArea.AddElement(ElementType.Consumer);
+        }
+
         private void TestMenuItem_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(this, "Ничего не произошло");
+        }
+
+        private void AddLinkButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _workArea.StartAddLink();
         }
     }
 }
 
 //Калькулятор растояний - даём ему граф, он считает вс расстояния и мы потом только спрашиваем
 //Внести в контролы координаты и сериализовать всё как турникеты, только связи отдельным списком
+//Менять курср если находимся в режиме добавления связи.
+//При передвижении контролов двигать связи, для этого храним кто к кому подключен

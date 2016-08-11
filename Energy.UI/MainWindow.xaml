@@ -63,6 +63,8 @@
 
                     <StackPanel Grid.Column="0">
                         <Button Name="AddStationOnCanvas" Content="Добавить станцию" Margin="2" Click="AddStationOnCanvas_OnClick" />
+                        <Button Name="AddConsumerOnCanvas" Content="Добавить потребителя" Margin="2" Click="AddConsumerOnCanvas_OnClick" />
+                        <Button Name="AddLinkButton" Content="Добавить линию связи" Margin="2" Click="AddLinkButton_OnClick" />
                     </StackPanel>
 
                     <Border Grid.Column="1" BorderBrush="Black" BorderThickness="3" ClipToBounds="True" Margin="0,0,10,0">

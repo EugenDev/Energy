@@ -19,14 +19,13 @@ namespace Energy.UI.Controls.WorkArea
                 return;
 
             var selectable = hitElement as ISelectable;
-            selectable.IsSelected = true;
-            WorkArea.SelectElement(selectable);
+            WorkArea.ToggleElementSelection(selectable);
         }
 
         public override void ProcessKeyUp(KeyEventArgs args)
         {
             if(args.Key == Key.LeftCtrl || args.Key == Key.RightCtrl)
-                WorkArea.SetMode(new StartMode(WorkArea));
+                WorkArea.SetStartMode();
         }
     }
 }

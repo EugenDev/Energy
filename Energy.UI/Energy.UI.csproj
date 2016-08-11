@@ -55,15 +55,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\BooleanToVisibilityConverter.cs" />
     <Compile Include="Controls\Connection.xaml.cs">
       <DependentUpon>Connection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Consumer.xaml.cs">
+      <DependentUpon>Consumer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ControlBase.cs" />
     <Compile Include="Controls\ISelectable.cs" />
     <Compile Include="Controls\Station.xaml.cs">
       <DependentUpon>Station.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\WorkArea\AddLinkMode.cs" />
     <Compile Include="Controls\WorkArea\DragMode.cs" />
     <Compile Include="Controls\WorkArea\MultiselectMode.cs" />
     <Compile Include="Controls\WorkArea\StartMode.cs" />
@@ -79,6 +82,10 @@
     </Compile>
     <Compile Include="Controls\WorkArea\WorkArea.cs" />
     <Page Include="Controls\Connection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Consumer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

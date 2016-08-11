@@ -3,17 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Energy.UI.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="20" d:DesignWidth="300">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="30" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Line Grid.Column="0" X1="0" Y1="10" X2="140" Y2="10" Stroke="Black" StrokeThickness="2" />
-        <TextBlock Grid.Column="1" Name="ValueTextBlock" />
-        <Line Grid.Column="2" X1="0" Y1="10" X2="140" Y2="10" Stroke="Black" StrokeThickness="2" />
+        <Line Grid.Column="0" X1="0" Y1="10" X2="135" Y2="10" Stroke="Black" StrokeThickness="2" />
+        <TextBlock Grid.Column="1" Name="ValueTextBlock" Text="{Binding Path=Distance}" VerticalAlignment="Stretch" HorizontalAlignment="Center" />
+        <Line Grid.Column="2" X1="0" Y1="10" X2="135" Y2="10" Stroke="Black" StrokeThickness="2" />
     </Grid>
 </UserControl>
