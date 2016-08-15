@@ -63,6 +63,8 @@
     </Compile>
     <Compile Include="Controls\ControlBase.cs" />
     <Compile Include="Controls\ISelectable.cs" />
+    <Compile Include="Controls\Link.cs" />
+    <Compile Include="Controls\LinkToolTip.cs" />
     <Compile Include="Controls\Station.xaml.cs">
       <DependentUpon>Station.xaml</DependentUpon>
     </Compile>

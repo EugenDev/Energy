@@ -24,6 +24,9 @@ namespace Energy.UI.Controls.WorkArea
         {
             if(e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
                 WorkArea.SetMode(new MultiselectMode(WorkArea));
+
+            if (e.Key == Key.Delete)
+                WorkArea.DeleteSelected();
         }
 
         protected override void ProcessHitTest(ControlBase element)

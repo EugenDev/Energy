@@ -11,12 +11,14 @@ namespace Energy.UI.Controls.WorkArea
     {
         public Canvas Canvas { get; }
         public WorkAreaModeBase Mode { get; private set; }
-        public HashSet<ISelectable> SelectedControls { get; private set; }
+        public HashSet<ISelectable> SelectedControls { get; }
+        private Dictionary<ControlBase, List<Link>> Links { get; }
 
         public WorkArea(Canvas canvas)
         {
             Canvas = canvas;
             SelectedControls = new HashSet<ISelectable>();
+            Links = new Dictionary<ControlBase, List<Link>>();
             Mode = new StartMode(this);
 
             Canvas.MouseLeftButtonDown += CanvasOnMouseLeftButtonDown;
@@ -108,17 +110,45 @@ namespace Energy.UI.Controls.WorkArea
             var from = (ControlBase) fromElement;
             var to = (ControlBase) selectedElement;
 
-            var line = new Line
+            var link = new Link(from, to, 10)
             {
-                X1 = from.X,
-                Y1 = from.Y,
-                X2 = to.X,
-                Y2 = to.Y,
                 Stroke = Brushes.DarkRed,
                 StrokeThickness = 2
             };
 
-            Canvas.Children.Add(line);
+            Canvas.Children.Add(link);
+
+            CollectLink(from, link);
+            CollectLink(to, link);
+        }
+
+        private void CollectLink(ControlBase element, Link link)
+        {
+            if (!Links.ContainsKey(element))
+            {
+                Links[element] = new List<Link>();
+            }
+            Links[element].Add(link);
+        }
+
+        public void DeleteSelected()
+        {
+            foreach (var control in SelectedControls)
+            {
+                var element = control as ControlBase;
+                if (element == null)
+                    continue;
+
+                Canvas.Children.Remove(element);
+
+                if(!Links.ContainsKey(element))
+                    continue;
+
+                foreach (var link in Links[element])
+                {
+                    Canvas.Children.Remove(link);
+                }
+            }
         }
     }
 }

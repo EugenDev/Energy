@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -10,25 +12,43 @@ namespace Energy.UI.Controls
         {
             X = Y = 0;
             IsSelected = false;
+            Links = new List<Link>();
         }
 
         public string ControlName { get; set; }
+
+        public List<Link> Links { get; private set; }
 
         protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
         {
             return new PointHitTestResult(this, hitTestParameters.HitPoint);
         }
 
+        public event EventHandler PositionChanged;
+
+        public void OnPositionChanged()
+        {
+            PositionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         public double X
         {
             get { return Canvas.GetLeft(this); }
-            set { Canvas.SetLeft(this, value); }
+            set
+            {
+                Canvas.SetLeft(this, value);
+                OnPositionChanged();
+            }
         }
 
         public double Y
         {
             get { return Canvas.GetTop(this); }
-            set { Canvas.SetTop(this, value); }
+            set
+            {
+                Canvas.SetTop(this, value);
+                OnPositionChanged();
+            }
         }
         
         public bool IsSelected
