@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace Energy.UI.Controls.WorkArea
 {
     public class WorkArea
     {
+        private readonly ControlsFactory _controlsFactory;
         public Canvas Canvas { get; }
         public WorkAreaModeBase Mode { get; private set; }
         public HashSet<ISelectable> SelectedControls { get; }
@@ -20,9 +20,15 @@ namespace Energy.UI.Controls.WorkArea
             SelectedControls = new HashSet<ISelectable>();
             Links = new Dictionary<ControlBase, List<Link>>();
             Mode = new StartMode(this);
+            _controlsFactory = new ControlsFactory(HandleWantDelete);
 
             Canvas.MouseLeftButtonDown += CanvasOnMouseLeftButtonDown;
             Canvas.MouseLeftButtonUp += CanvasOnMouseLeftButtonUp;
+        }
+
+        private void HandleWantDelete(object sender, RoutedEventArgs args)
+        {
+            MessageBox.Show("Delete!!!");
         }
 
         public void SetStartMode()
@@ -56,24 +62,12 @@ namespace Energy.UI.Controls.WorkArea
             Mode.ProcessKeyDown(e);
         }
 
-        private static int _staionsCounter;
-        private static int _consumersCounter;
+        private static int _controlsCounter;
 
         public void AddElement(ElementType elementType)
         {
-            switch (elementType)
-            {
-                case ElementType.Station:
-                    Canvas.Children.Add(new Station("Station " + _staionsCounter++));
-                    break;
-
-                case ElementType.Consumer:
-                    Canvas.Children.Add(new Consumer("Consumer " + _consumersCounter++));
-                    break;
-
-                default:
-                    throw new InvalidOperationException();
-            }
+            var name = "Control_" + _controlsCounter++;
+            Canvas.Children.Add(_controlsFactory.CreateControl(elementType, name));
         }
         
         public void ClearSelection()
@@ -149,6 +143,8 @@ namespace Energy.UI.Controls.WorkArea
                     Canvas.Children.Remove(link);
                 }
             }
+            ClearSelection();
+            SetStartMode();
         }
     }
 }

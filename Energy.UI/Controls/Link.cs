@@ -16,10 +16,11 @@ namespace Energy.UI.Controls
         {
             _from = from;
             _to = to;
-            Distance = distance;
-            ToolTip = new LinkToolTip(this);
             _from.PositionChanged += EndPointPositionChanged;
             _to.PositionChanged += EndPointPositionChanged;
+
+            Distance = distance;
+            ToolTip = new LinkToolTip(this);
 
             Panel.SetZIndex(this, -1);
         }
@@ -38,7 +39,6 @@ namespace Energy.UI.Controls
 
                 var toX = _to.X + _to.Width/2;
                 var toY = _to.Y + _to.Height/2;
-
                 return new LineGeometry
                 {
                     StartPoint = new Point {X = fromX, Y = fromY},

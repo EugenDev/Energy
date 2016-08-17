@@ -62,6 +62,7 @@
       <DependentUpon>Consumer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ControlBase.cs" />
+    <Compile Include="Controls\ControlsFactory.cs" />
     <Compile Include="Controls\ISelectable.cs" />
     <Compile Include="Controls\Link.cs" />
     <Compile Include="Controls\LinkToolTip.cs" />
