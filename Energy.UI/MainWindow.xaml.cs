@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using Energy.UI.Controls;
 using Energy.UI.Controls.WorkArea;
+using Energy.UI.Model;
 using Energy.UI.Serialization;
 using Energy.UI.Windows;
 using Microsoft.Win32;
@@ -48,35 +47,23 @@ namespace Energy.UI
             }
             return null;
         }
-
-        private void AddStation_OnClick(object sender, RoutedEventArgs e)
-        {
-            var requestedName = RequestName();
-            if (!string.IsNullOrWhiteSpace(requestedName))
-            {
-                TaskModel.AddStation(requestedName);
-                RefreshColumns();
-            }
-        }
-
-        private void AddConsumer_OnClick(object sender, RoutedEventArgs e)
-        {
-            var requestedName = RequestName();
-            if (!string.IsNullOrWhiteSpace(requestedName))
-            {
-                TaskModel.AddConsumer(requestedName);
-                RefreshColumns();
-            }
-        }
-
+        
         private void AddFeature_OnClick(object sender, RoutedEventArgs e)
         {
             var requestedName = RequestName();
             if (!string.IsNullOrWhiteSpace(requestedName))
             {
-                TaskModel.AddCommonFeature(requestedName);
+                TaskModel.AddFeature(requestedName);
                 RefreshColumns();
             }
+        }
+
+        private void RemoveFeature_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedColumn = ConsumersDataGrid.SelectedCells[0].Column;
+            var featureName = ((selectedColumn as DataGridTextColumn).Binding as Binding).Path.Path;
+            TaskModel.RemoveFeature(featureName);
+            RefreshColumns();
         }
 
         private DataGridTextColumn CreateFeatureColumn(string featureName)
@@ -92,18 +79,10 @@ namespace Energy.UI
         {
             StationsDataGrid.Columns.Clear();
             ConsumersDataGrid.Columns.Clear();
-            foreach (var featureName in TaskModel.StationsFeaturesNames)
+            foreach (var featureName in TaskModel.FeaturesNames)
             {
-                StationsDataGrid.Columns.Add(CreateFeatureColumn(featureName));   
-            }
-            foreach (var featureName in TaskModel.ConsumersFeaturesNames)
-            {
-                ConsumersDataGrid.Columns.Add(CreateFeatureColumn(featureName));
-            }
-            foreach (var featureName in TaskModel.CommonFeatureNames)
-            {
-                ConsumersDataGrid.Columns.Add(CreateFeatureColumn(featureName));
                 StationsDataGrid.Columns.Add(CreateFeatureColumn(featureName));
+                ConsumersDataGrid.Columns.Add(CreateFeatureColumn(featureName));
             }
         }
         
@@ -122,9 +101,7 @@ namespace Energy.UI
 
         private void NewTaskMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            if (TaskModel.CommonFeatureNames.Count != 0
-                || TaskModel.ConsumersFeaturesNames.Count != 0
-                || TaskModel.StationsFeaturesNames.Count != 0)
+            if (TaskModel.FeaturesNames.Count != 0)
             {
                 var mbResult = MessageBox.Show("Создать новую модель, удалив старую?", "Подтверждение",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -180,68 +157,34 @@ namespace Energy.UI
             }
         }
         
-        private void RemoveFeatureOnConsumer_OnClick(object sender, RoutedEventArgs e)
-        {
-            var selectedColumn = ConsumersDataGrid.SelectedCells[0].Column;
-            var featureName = ((selectedColumn as DataGridTextColumn).Binding as Binding).Path.Path;
-            if (TaskModel.ConsumersFeaturesNames.Contains(featureName))
-            {
-                MessageBox.Show("Невозможно удалить обязательную фичу", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                return;
-            }
-            TaskModel.RemoveConsumerFeature(featureName);
-            RefreshColumns();
-        }
-
-        private void RemoveFeatureOnStation_OnClick(object sender, RoutedEventArgs e)
-        {
-            var selectedColumn = StationsDataGrid.SelectedCells[0].Column;
-            var featureName = ((selectedColumn as DataGridTextColumn).Binding as Binding).Path.Path;
-            if (TaskModel.StationsFeaturesNames.Contains(featureName))
-            {
-                MessageBox.Show("Невозможно удалить обязательную фичу", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                return;
-            }
-            TaskModel.RemoveStationFeature(featureName);
-            RefreshColumns();
-        }
-        
-        private void RemoveStation_OnClick(object sender, RoutedEventArgs e)
-        {
-            if(StationsDataGrid.SelectedItem != null)
-                TaskModel.RemoveStation(StationsDataGrid.SelectedItem as FeaturedItem);
-        }
-
-        private void RemoveConsumer_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (StationsDataGrid.SelectedItem != null)
-                TaskModel.RemoveConsumer(ConsumersDataGrid.SelectedItem as FeaturedItem);
-        }
-
-        private void AddStationOnCanvas_OnClick(object sender, RoutedEventArgs e)
-        {
-            _workArea.AddElement(ElementType.Station);
-        }
-
-        private void AddConsumerOnCanvas_OnClick(object sender, RoutedEventArgs e)
-        {
-            _workArea.AddElement(ElementType.Consumer);
-        }
-
         private void TestMenuItem_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(this, "Ничего не произошло");
+        }
+        
+        private static int _controlsCounter;
+
+        private void AddStation_OnClick(object sender, RoutedEventArgs e)
+        {
+            var name = "Station_" + _controlsCounter++;
+            _workArea.AddElement(name, ControlType.Station);
+            TaskModel.AddStation(name);
         }
 
-        private void AddLinkButton_OnClick(object sender, RoutedEventArgs e)
+        private void AddConsumer_OnClick(object sender, RoutedEventArgs e)
+        {
+            var name = "Consumer_" + _controlsCounter++;
+            _workArea.AddElement(name, ControlType.Consumer);
+            TaskModel.AddConsumer(name);
+        }
+
+        private void AddLink_OnClick(object sender, RoutedEventArgs e)
         {
             _workArea.StartAddLink();
         }
     }
 }
 
-//Калькулятор растояний - даём ему граф, он считает вс расстояния и мы потом только спрашиваем
-//Внести в контролы координаты и сериализовать всё как турникеты, только связи отдельным списком
+//Калькулятор растояний - даём ему граф, он считает все расстояния и мы потом только спрашиваем
+//Экспортировать и импортировать график и таблицы
 //Менять курср если находимся в режиме добавления связи.
-//Сделать удаление через контекстное меню
 //Убрать инфу о ссылках из контролов. Сделать слежение на уровне WorkArea

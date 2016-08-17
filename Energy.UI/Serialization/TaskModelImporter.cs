@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Linq;
+using Energy.UI.Model;
 
 namespace Energy.UI.Serialization
 {
@@ -10,8 +11,6 @@ namespace Energy.UI.Serialization
             var result = new TaskModel();
             var lineNumber = 0;
             var commonFeaturesNames = lines[lineNumber++].Split(',');
-            //var stationFeaturesNames = lines[lineNumber++].Split(',');
-            //var consumersFeaturesNames = lines[lineNumber++].Split(',');
             var stationsNames = lines[lineNumber++].Split(',');
             var consumersNames = lines[lineNumber++].Split(',');
 
@@ -22,7 +21,7 @@ namespace Energy.UI.Serialization
                 result.AddConsumer(consumerName);
 
             foreach (var featureName in commonFeaturesNames)
-                result.AddCommonFeature(featureName);
+                result.AddFeature(featureName);
 
             var stationsCount = stationsNames.Length;
             for (var i = 0; i < stationsCount; i++)
@@ -30,9 +29,9 @@ namespace Energy.UI.Serialization
                 var columnIndex = 0;
                 var stationData = lines[lineNumber++].Split(',').Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray();
                 var station = result.Stations[i];
-                foreach (var featureName in result.StationsFeaturesNames)
+                foreach (var featureName in result.FeaturesNames)
                     station[featureName] = stationData[columnIndex++];
-                foreach (var featureName in result.CommonFeatureNames)
+                foreach (var featureName in result.FeaturesNames)
                     station[featureName] = stationData[columnIndex++];
             }
 
@@ -42,9 +41,9 @@ namespace Energy.UI.Serialization
                 var columnIndex = 0;
                 var consumerData = lines[lineNumber++].Split(',').Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray();
                 var consumer = result.Consumers[i];
-                foreach (var featureName in result.ConsumersFeaturesNames)
+                foreach (var featureName in result.FeaturesNames)
                     consumer[featureName] = consumerData[columnIndex++];
-                foreach (var featureName in result.CommonFeatureNames)
+                foreach (var featureName in result.FeaturesNames)
                     consumer[featureName] = consumerData[columnIndex++];
             }
 

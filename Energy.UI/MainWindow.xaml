@@ -4,15 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:energyUi="clr-namespace:Energy.UI"
+        xmlns:model="clr-namespace:Energy.UI.Model"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="800">
 
     <Window.DataContext>
-        <energyUi:TaskModel />
+        <model:TaskModel />
     </Window.DataContext>
 
     <Window.Resources>
-        <DataTemplate x:Key="DataGridRowHeader" DataType="energyUi:FeaturedItem" >
+        <DataTemplate x:Key="DataGridRowHeader" DataType="model:FeaturedItem" >
             <TextBlock Text="{Binding Path=DataContext.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGridRowHeader}}" />
         </DataTemplate>
         
@@ -47,6 +48,11 @@
                 <MenuItem Name="SaveTaskMenuItem" Header="Сохранить" Click="SaveTaskMenuItem_OnClick"/>
                 <MenuItem Name="SolveTaskMenuItem" Header="Решить" Click="SolveTaskMenuItem_OnClick" />
             </MenuItem>
+            <MenuItem Header="Добавить">
+                <MenuItem Name="AddStation" Header="Станцию" Click="AddStation_OnClick" />
+                <MenuItem Name="AddConsumer" Header="Потребителя" Click="AddConsumer_OnClick"/>
+                <MenuItem Name="AddLink" Header="Связь" Click="AddLink_OnClick" />
+            </MenuItem>
             <MenuItem Header="Тест">
                 <MenuItem Name="GenerateDataMenuItem"  Header="Сгенерировать данные" Click="GenerateDataMenuItem_OnClick"/>
                 <MenuItem Name="TestMenuItem" Header="Просто тест" Click="TestMenuItem_OnClickestMenuItem_OnClick" />
@@ -54,26 +60,12 @@
         </Menu>
 
         <TabControl Grid.Row="1">
-            <TabItem Header="График">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0">
-                        <Button Name="AddStationOnCanvas" Content="Добавить станцию" Margin="2" Click="AddStationOnCanvas_OnClick" />
-                        <Button Name="AddConsumerOnCanvas" Content="Добавить потребителя" Margin="2" Click="AddConsumerOnCanvas_OnClick" />
-                        <Button Name="AddLinkButton" Content="Добавить линию связи" Margin="2" Click="AddLinkButton_OnClick" />
-                    </StackPanel>
-
-                    <Border Grid.Column="1" BorderBrush="Black" BorderThickness="3" ClipToBounds="True" Margin="0,0,10,0">
-                        <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" Name="ScrollBars" >
-                            <Canvas DockPanel.Dock="Top" Name="MainCanvas" Background="Azure" AllowDrop="True" VerticalAlignment="Top" HorizontalAlignment="Left" Width="3200" Height="1800" ClipToBounds="True" />
-                        </ScrollViewer>
-                    </Border>
-
-                </Grid>
+            <TabItem Header="Визуализация">
+                <Border BorderBrush="Black" BorderThickness="3" ClipToBounds="True" Margin="0,0,10,0">
+                    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" Name="ScrollBars" >
+                        <Canvas DockPanel.Dock="Top" Name="MainCanvas" Background="Azure" AllowDrop="True" VerticalAlignment="Top" HorizontalAlignment="Left" Width="3200" Height="1800" ClipToBounds="True" />
+                    </ScrollViewer>
+                </Border>
             </TabItem>
             
             <TabItem Header="Станции">
@@ -84,10 +76,8 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0">
-                        <Button x:Name="AddStation" Content="Добавить станцию" Margin="2" Click="AddStation_OnClick" />
-                        <Button x:Name="RemoveStation" Content="Удалить станцию" Margin="2" Click="RemoveStation_OnClick" />
                         <Button x:Name="AddFeatureOnStation" Content="Добавить фичу" Margin="2" Click="AddFeature_OnClick" />
-                        <Button x:Name="RemoveFeatureOnStation" Content="Удалить фичу" Margin="2" Click="RemoveFeatureOnStation_OnClick" />
+                        <Button x:Name="RemoveFeatureOnStation" Content="Удалить фичу" Margin="2" Click="RemoveFeature_Click" />
                     </StackPanel>
                     <DataGrid x:Name="StationsDataGrid" Grid.Column="1" ItemsSource="{Binding Stations}" />
                 </Grid>
@@ -101,10 +91,8 @@
                     </Grid.ColumnDefinitions>
                     
                     <StackPanel Grid.Column="0">
-                        <Button x:Name="AddConsumer" Content="Добавить потребителя" Margin="2" Click="AddConsumer_OnClick" />
-                        <Button x:Name="RemoveConsumer" Content="Удалить потребителя" Margin="2" Click="RemoveConsumer_OnClick" />
                         <Button x:Name="AddFeatureOnConsumer" Content="Добавить фичу" Margin="2" Click="AddFeature_OnClick" />
-                        <Button x:Name="RemoveFeatureOnConsumer" Content="Удалить фичу" Margin="2" Click="RemoveFeatureOnConsumer_OnClick" />
+                        <Button x:Name="RemoveFeatureOnConsumer" Content="Удалить фичу" Margin="2" Click="RemoveFeature_Click" />
                     </StackPanel>
                     <DataGrid x:Name="ConsumersDataGrid" Grid.Column="1" ItemsSource="{Binding Consumers}" />
                 </Grid>

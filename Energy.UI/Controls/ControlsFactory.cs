@@ -5,20 +5,20 @@ namespace Energy.UI.Controls
 {
     public class ControlsFactory
     {
-        public event EventHandler<WantDeleteControlEventArgs> WantDeleteControl;
-        public event EventHandler<WantDeleteLinkEventArgs> WantDeleteLink;
+        public event EventHandler<WantDeleteItemEventArgs<ControlBase>> WantDeleteControl;
+        public event EventHandler<WantDeleteItemEventArgs<Link>> WantDeleteLink;
         
-        public ControlBase CreateControl(ElementType elementType, string name)
+        public ControlBase CreateControl(ControlType controlType, string name)
         {
             ControlBase result;
 
-            switch (elementType)
+            switch (controlType)
             {
-                case ElementType.Station:
+                case ControlType.Station:
                     result = new Station(name);
                     ConfigureControl(result);
                     return result;
-                case ElementType.Consumer:
+                case ControlType.Consumer:
                     result = new Consumer(name);
                     ConfigureControl(result);
                     return result;
@@ -43,32 +43,22 @@ namespace Energy.UI.Controls
 
         private void Link_WantDelete(object sender, EventArgs e)
         {
-            WantDeleteLink?.Invoke(this, new WantDeleteLinkEventArgs(sender as Link));
+            WantDeleteLink?.Invoke(this, new WantDeleteItemEventArgs<Link>(sender as Link));
         }
 
         private void Control_WantDelete(object sender, EventArgs e)
         {
-            WantDeleteControl?.Invoke(this, new WantDeleteControlEventArgs(sender as ControlBase));
+            WantDeleteControl?.Invoke(this, new WantDeleteItemEventArgs<ControlBase>(sender as ControlBase));
         }
     }
 
-    public class WantDeleteControlEventArgs : EventArgs
+    public class WantDeleteItemEventArgs<T> : EventArgs
     {
-        public ControlBase Control { get; }
+        public T Item { get; set; }
 
-        public WantDeleteControlEventArgs(ControlBase control)
+        public WantDeleteItemEventArgs(T item)
         {
-            Control = control;
-        }
-    }
-
-    public class WantDeleteLinkEventArgs : EventArgs
-    {
-        public Link Link { get; }
-
-        public WantDeleteLinkEventArgs(Link link)
-        {
-            Link = link;
+            Item = item;
         }
     }
 }

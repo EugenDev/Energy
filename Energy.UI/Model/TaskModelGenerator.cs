@@ -1,4 +1,5 @@
 ﻿using System;
+using Energy.UI.Model;
 
 namespace Energy.UI
 {
@@ -22,20 +23,20 @@ namespace Energy.UI
             }
             for (int i = 0; i < commonFeaturesCount; i++)
             {
-                result.AddCommonFeature("Feature_" + i);
+                result.AddFeature("Feature_" + i);
             }
             foreach (var station in result.Stations)
             {
-                foreach (var stationFeature in result.StationsFeaturesNames)
+                foreach (var stationFeature in result.FeaturesNames)
                     station[stationFeature] = Math.Round(r.NextDouble(), 1);
-                foreach (var commonFeature in result.CommonFeatureNames)
+                foreach (var commonFeature in result.FeaturesNames)
                     station[commonFeature] = Math.Round(r.NextDouble(), 1);
             }
             foreach (var consumer in result.Consumers)
             {
-                foreach (var consumerFeature in result.ConsumersFeaturesNames)
+                foreach (var consumerFeature in result.FeaturesNames)
                     consumer[consumerFeature] = Math.Round(r.NextDouble(), 1);
-                foreach (var commonFeature in result.CommonFeatureNames)
+                foreach (var commonFeature in result.FeaturesNames)
                     consumer[commonFeature] = Math.Round(r.NextDouble(), 1);
             }
             return result;

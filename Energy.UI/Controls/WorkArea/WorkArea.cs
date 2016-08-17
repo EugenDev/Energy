@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,10 +27,10 @@ namespace Energy.UI.Controls.WorkArea
             Canvas.MouseLeftButtonDown += CanvasOnMouseLeftButtonDown;
             Canvas.MouseLeftButtonUp += CanvasOnMouseLeftButtonUp;
         }
-
-        private void ControlsFactoryOnWantDeleteControl(object sender, WantDeleteControlEventArgs wantDeleteControlEventArgs)
+        
+        private void ControlsFactoryOnWantDeleteControl(object sender, WantDeleteItemEventArgs<ControlBase> wantDeleteControlEventArgs)
         {
-            DeleteControl(wantDeleteControlEventArgs.Control);
+            DeleteControl(wantDeleteControlEventArgs.Item);
         }
 
         private void DeleteControl(ControlBase control)
@@ -47,17 +48,18 @@ namespace Energy.UI.Controls.WorkArea
             }
 
             Canvas.Children.Remove(control);
+
         }
 
-        private void ControlsFactoryOnWantDeleteLink(object sender, WantDeleteLinkEventArgs e)
+        private void ControlsFactoryOnWantDeleteLink(object sender, WantDeleteItemEventArgs<Link> e)
         {
-            if (Links.ContainsKey(e.Link.From))
-                Links[e.Link.From].Remove(e.Link);
+            if (Links.ContainsKey(e.Item.From))
+                Links[e.Item.From].Remove(e.Item);
 
-            if (Links.ContainsKey(e.Link.To))
-                Links[e.Link.To].Remove(e.Link);
+            if (Links.ContainsKey(e.Item.To))
+                Links[e.Item.To].Remove(e.Item);
 
-            Canvas.Children.Remove(e.Link);
+            Canvas.Children.Remove(e.Item);
         }
 
         public void SetStartMode()
@@ -91,12 +93,9 @@ namespace Energy.UI.Controls.WorkArea
             Mode.ProcessKeyDown(e);
         }
 
-        private static int _controlsCounter;
-
-        public void AddElement(ElementType elementType)
+        public void AddElement(string name, ControlType controlType)
         {
-            var name = "Control_" + _controlsCounter++;
-            Canvas.Children.Add(_controlsFactory.CreateControl(elementType, name));
+            Canvas.Children.Add(_controlsFactory.CreateControl(controlType, name));
         }
         
         public void ClearSelection()
