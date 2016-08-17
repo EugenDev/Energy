@@ -1,36 +1,74 @@
 ﻿using System;
-using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Energy.UI.Controls
 {
     public class ControlsFactory
     {
-        private readonly Action<object, RoutedEventArgs> _wantDeleteAction;
-
-        public ControlsFactory(Action<object, RoutedEventArgs> wantDeleteAction)
-        {
-            _wantDeleteAction = wantDeleteAction;
-        }
-
-        private ContextMenu CreateContextMenu()
-        {
-            var result = new ContextMenu();
-            var deleteItem = new MenuItem {Header = "Удалить"};
-            deleteItem.Click += new RoutedEventHandler(_wantDeleteAction);
-            result.Items.Add(deleteItem);
-            return result;
-        }
+        public event EventHandler<WantDeleteControlEventArgs> WantDeleteControl;
+        public event EventHandler<WantDeleteLinkEventArgs> WantDeleteLink;
         
         public ControlBase CreateControl(ElementType elementType, string name)
         {
-            if (elementType == ElementType.Station)
-                return new Station(name) { ContextMenu = CreateContextMenu() };
+            ControlBase result;
 
-            if (elementType == ElementType.Consumer)
-                return new Consumer(name) { ContextMenu = CreateContextMenu() };
+            switch (elementType)
+            {
+                case ElementType.Station:
+                    result = new Station(name);
+                    ConfigureControl(result);
+                    return result;
+                case ElementType.Consumer:
+                    result = new Consumer(name);
+                    ConfigureControl(result);
+                    return result;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
 
-            throw new InvalidOperationException();
+        private void ConfigureControl(ControlBase control)
+        {
+            control.WantDelete += Control_WantDelete;
+        }
+
+        public Link CreateLink(ControlBase from, ControlBase to, double distance)
+        {
+            var result = new Link(from, to, distance);
+            result.WantDelete += Link_WantDelete;
+            result.Stroke = Brushes.DarkRed;
+            result.StrokeThickness = 2;
+            return result;
+        }
+
+        private void Link_WantDelete(object sender, EventArgs e)
+        {
+            WantDeleteLink?.Invoke(this, new WantDeleteLinkEventArgs(sender as Link));
+        }
+
+        private void Control_WantDelete(object sender, EventArgs e)
+        {
+            WantDeleteControl?.Invoke(this, new WantDeleteControlEventArgs(sender as ControlBase));
+        }
+    }
+
+    public class WantDeleteControlEventArgs : EventArgs
+    {
+        public ControlBase Control { get; }
+
+        public WantDeleteControlEventArgs(ControlBase control)
+        {
+            Control = control;
+        }
+    }
+
+    public class WantDeleteLinkEventArgs : EventArgs
+    {
+        public Link Link { get; }
+
+        public WantDeleteLinkEventArgs(Link link)
+        {
+            Link = link;
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Energy.UI.Controls
             X = Y = 0;
             IsSelected = false;
             Links = new List<Link>();
+            ContextMenu = CreateContextMenu();
         }
 
         public string ControlName { get; set; }
@@ -73,6 +74,22 @@ namespace Energy.UI.Controls
         public void ToggleSelection()
         {
             IsSelected = !IsSelected;
+        }
+
+        public event EventHandler WantDelete;
+
+        private void OnWantDelete()
+        {
+            WantDelete?.Invoke(this, EventArgs.Empty);
+        }
+
+        private ContextMenu CreateContextMenu()
+        {
+            var result = new ContextMenu();
+            var deleteItem = new MenuItem { Header = "Удалить" };
+            deleteItem.Click += (sender, args) => OnWantDelete();
+            result.Items.Add(deleteItem);
+            return result;
         }
     }
 }
