@@ -7,17 +7,17 @@ namespace Energy.UI.Controls.WorkArea
 {
     public abstract class WorkAreaModeBase
     {
-        protected readonly WorkArea WorkArea;
-        protected Canvas Canvas => WorkArea.Canvas;
+        protected readonly GraphControl GraphControl;
+        protected Canvas Canvas => GraphControl.Canvas;
 
         protected Point GetCurrentPoint()
         {
             return Mouse.GetPosition(Canvas);
         }
 
-        protected WorkAreaModeBase(WorkArea workArea)
+        protected WorkAreaModeBase(GraphControl graphControl)
         {
-            WorkArea = workArea;
+            GraphControl = graphControl;
         }
 
         protected void HitTest()

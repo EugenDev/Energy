@@ -6,13 +6,13 @@ namespace Energy.UI.Controls.WorkArea
 {
     public class StartMode : WorkAreaModeBase
     {
-        public StartMode(WorkArea workArea) : base(workArea)
+        public StartMode(GraphControl graphControl) : base(graphControl)
         {
         }
 
         public override void MouseLeftButtonUp()
         {
-            WorkArea.ClearSelection();
+            GraphControl.ClearSelection();
         }
 
         public override void MouseLeftButtonDown()
@@ -23,10 +23,10 @@ namespace Energy.UI.Controls.WorkArea
         public override void ProcessKeyDown(KeyEventArgs e)
         {
             if(e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
-                WorkArea.SetMode(new MultiselectMode(WorkArea));
+                GraphControl.SetMode(new MultiselectMode(GraphControl));
 
             if (e.Key == Key.Delete)
-                WorkArea.DeleteSelected();
+                GraphControl.DeleteSelected();
         }
 
         protected override void ProcessHitTest(ControlBase element)
@@ -34,11 +34,11 @@ namespace Energy.UI.Controls.WorkArea
             if(!(element is ISelectable))
                 return;
             
-            var selectedElements = WorkArea.SelectedControls.Count != 0
-                ? WorkArea.SelectedControls.Cast<ControlBase>().ToList()
+            var selectedElements = GraphControl.SelectedControls.Count != 0
+                ? GraphControl.SelectedControls.Cast<ControlBase>().ToList()
                 : new List<ControlBase> {element };
 
-            WorkArea.SetMode(new DragMode(WorkArea, selectedElements));
+            GraphControl.SetMode(new DragMode(GraphControl, selectedElements));
         }
     }
 }

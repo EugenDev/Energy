@@ -4,7 +4,7 @@ namespace Energy.UI.Controls.WorkArea
 {
     public class MultiselectMode : WorkAreaModeBase
     {
-        public MultiselectMode(WorkArea workArea) : base(workArea)
+        public MultiselectMode(GraphControl graphControl) : base(graphControl)
         {
         }
 
@@ -19,13 +19,13 @@ namespace Energy.UI.Controls.WorkArea
                 return;
 
             var selectable = hitElement as ISelectable;
-            WorkArea.ToggleElementSelection(selectable);
+            GraphControl.ToggleElementSelection(selectable);
         }
 
         public override void ProcessKeyUp(KeyEventArgs args)
         {
             if(args.Key == Key.LeftCtrl || args.Key == Key.RightCtrl)
-                WorkArea.SetStartMode();
+                GraphControl.SetStartMode();
         }
     }
 }

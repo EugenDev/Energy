@@ -10,7 +10,7 @@ namespace Energy.UI.Controls.WorkArea
         private readonly List<ControlBase> _controls;
         private Vector _previousVector;
 
-        public DragMode(WorkArea workArea, List<ControlBase> controls) : base(workArea)
+        public DragMode(GraphControl graphControl, List<ControlBase> controls) : base(graphControl)
         {
             _startPoint = GetCurrentPoint();
             _previousVector = new Vector();
@@ -34,7 +34,7 @@ namespace Energy.UI.Controls.WorkArea
         public override void MouseLeftButtonUp()
         {
             Canvas.MouseMove -= MouseMoveHandler;
-            WorkArea.SetStartMode();
+            GraphControl.SetStartMode();
         }
     }
 }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:energyUi="clr-namespace:Energy.UI"
         xmlns:model="clr-namespace:Energy.UI.Model"
+        xmlns:controls="clr-namespace:Energy.UI.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="800">
 
@@ -61,11 +62,7 @@
 
         <TabControl Grid.Row="1">
             <TabItem Header="Визуализация">
-                <Border BorderBrush="Black" BorderThickness="3" ClipToBounds="True" Margin="0,0,10,0">
-                    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" Name="ScrollBars" >
-                        <Canvas DockPanel.Dock="Top" Name="MainCanvas" Background="Azure" AllowDrop="True" VerticalAlignment="Top" HorizontalAlignment="Left" Width="3200" Height="1800" ClipToBounds="True" />
-                    </ScrollViewer>
-                </Border>
+                <controls:GraphControl x:Name="GraphControl" />
             </TabItem>
             
             <TabItem Header="Станции">

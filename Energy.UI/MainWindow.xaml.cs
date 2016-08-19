@@ -23,23 +23,22 @@ namespace Energy.UI
             get { return (TaskModel) DataContext; }
             set { DataContext = value; }
         }
-
-        private readonly WorkArea _workArea;
         
         public MainWindow()
         {
             InitializeComponent();
-            _workArea = new WorkArea(MainCanvas);
-            PreviewKeyUp += _workArea.ProcessKeyUp;
-            PreviewKeyDown += _workArea.ProcessKeyDown;
+            PreviewKeyUp += GraphControl.ProcessKeyUp;
+            PreviewKeyDown += GraphControl.ProcessKeyDown;
             TaskModel = new TaskModel();
         }
 
         private string RequestName()
         {
-            var nameRequestWindow = new NameRequestWindow();
-            nameRequestWindow.Owner = this;
-            nameRequestWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            var nameRequestWindow = new NameRequestWindow
+            {
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
             var dialogResult = nameRequestWindow.ShowDialog();
             if (dialogResult.HasValue && dialogResult.Value)
             {
@@ -53,7 +52,7 @@ namespace Energy.UI
             var requestedName = RequestName();
             if (!string.IsNullOrWhiteSpace(requestedName))
             {
-                TaskModel.AddFeature(requestedName);
+                TaskModel.FeaturesModel.AddFeature(requestedName);
                 RefreshColumns();
             }
         }
@@ -62,7 +61,7 @@ namespace Energy.UI
         {
             var selectedColumn = ConsumersDataGrid.SelectedCells[0].Column;
             var featureName = ((selectedColumn as DataGridTextColumn).Binding as Binding).Path.Path;
-            TaskModel.RemoveFeature(featureName);
+            TaskModel.FeaturesModel.RemoveFeature(featureName);
             RefreshColumns();
         }
 
@@ -79,7 +78,7 @@ namespace Energy.UI
         {
             StationsDataGrid.Columns.Clear();
             ConsumersDataGrid.Columns.Clear();
-            foreach (var featureName in TaskModel.FeaturesNames)
+            foreach (var featureName in TaskModel.FeaturesModel.FeaturesNames)
             {
                 StationsDataGrid.Columns.Add(CreateFeatureColumn(featureName));
                 ConsumersDataGrid.Columns.Add(CreateFeatureColumn(featureName));
@@ -101,7 +100,7 @@ namespace Energy.UI
 
         private void NewTaskMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            if (TaskModel.FeaturesNames.Count != 0)
+            if (TaskModel.FeaturesModel.FeaturesNames.Count != 0)
             {
                 var mbResult = MessageBox.Show("Создать новую модель, удалив старую?", "Подтверждение",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -166,20 +165,20 @@ namespace Energy.UI
         private void AddStation_OnClick(object sender, RoutedEventArgs e)
         {
             var name = "Station_" + _controlsCounter++;
-            _workArea.AddElement(name, ControlType.Station);
-            TaskModel.AddStation(name);
+            GraphControl.AddElement(name, ControlType.Station);
+            TaskModel.FeaturesModel.AddStation(name);
         }
 
         private void AddConsumer_OnClick(object sender, RoutedEventArgs e)
         {
             var name = "Consumer_" + _controlsCounter++;
-            _workArea.AddElement(name, ControlType.Consumer);
-            TaskModel.AddConsumer(name);
+            GraphControl.AddElement(name, ControlType.Consumer);
+            TaskModel.FeaturesModel.AddConsumer(name);
         }
 
         private void AddLink_OnClick(object sender, RoutedEventArgs e)
         {
-            _workArea.StartAddLink();
+            GraphControl.StartAddLink();
         }
     }
 }

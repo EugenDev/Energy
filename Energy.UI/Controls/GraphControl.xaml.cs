@@ -1,25 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Energy.UI.Controls.WorkArea;
 
-namespace Energy.UI.Controls.WorkArea
+namespace Energy.UI.Controls
 {
-    public class WorkArea
+    /// <summary>
+    /// Interaction logic for GraphControl.xaml
+    /// </summary>
+    public partial class GraphControl : UserControl
     {
+        public Canvas Canvas => MainCanvas;
+
         private readonly ControlsFactory _controlsFactory;
-        public Canvas Canvas { get; }
         public WorkAreaModeBase Mode { get; private set; }
         public HashSet<ISelectable> SelectedControls { get; }
         private Dictionary<ControlBase, List<Link>> Links { get; }
 
-        public WorkArea(Canvas canvas)
+        public GraphControl()
         {
-            Canvas = canvas;
+            InitializeComponent();
+
             SelectedControls = new HashSet<ISelectable>();
             Links = new Dictionary<ControlBase, List<Link>>();
             Mode = new StartMode(this);
+
             _controlsFactory = new ControlsFactory();
             _controlsFactory.WantDeleteLink += ControlsFactoryOnWantDeleteLink;
             _controlsFactory.WantDeleteControl += ControlsFactoryOnWantDeleteControl;
@@ -27,8 +33,13 @@ namespace Energy.UI.Controls.WorkArea
             Canvas.MouseLeftButtonDown += CanvasOnMouseLeftButtonDown;
             Canvas.MouseLeftButtonUp += CanvasOnMouseLeftButtonUp;
         }
+
+        public void AddControl(string name, ControlType controlType)
+        {
+
+        }
         
-        private void ControlsFactoryOnWantDeleteControl(object sender, WantDeleteItemEventArgs<ControlBase> wantDeleteControlEventArgs)
+        private void ControlsFactoryOnWantDeleteControl(object sender, ObjectEventArgs<ControlBase> wantDeleteControlEventArgs)
         {
             DeleteControl(wantDeleteControlEventArgs.Item);
         }
@@ -51,7 +62,7 @@ namespace Energy.UI.Controls.WorkArea
 
         }
 
-        private void ControlsFactoryOnWantDeleteLink(object sender, WantDeleteItemEventArgs<Link> e)
+        private void ControlsFactoryOnWantDeleteLink(object sender, ObjectEventArgs<Link> e)
         {
             if (Links.ContainsKey(e.Item.From))
                 Links[e.Item.From].Remove(e.Item);
@@ -97,7 +108,7 @@ namespace Energy.UI.Controls.WorkArea
         {
             Canvas.Children.Add(_controlsFactory.CreateControl(controlType, name));
         }
-        
+
         public void ClearSelection()
         {
             foreach (var control in SelectedControls)
@@ -129,8 +140,8 @@ namespace Energy.UI.Controls.WorkArea
 
         public void LinkElements(ISelectable fromElement, ISelectable selectedElement)
         {
-            var from = (ControlBase) fromElement;
-            var to = (ControlBase) selectedElement;
+            var from = (ControlBase)fromElement;
+            var to = (ControlBase)selectedElement;
             var link = _controlsFactory.CreateLink(from, to, 10.0);
             Canvas.Children.Add(link);
             CollectLink(from, link);

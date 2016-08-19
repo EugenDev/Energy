@@ -60,9 +60,13 @@
     </Compile>
     <Compile Include="Controls\ControlBase.cs" />
     <Compile Include="Controls\ControlsFactory.cs" />
+    <Compile Include="Controls\GraphControl.xaml.cs">
+      <DependentUpon>GraphControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ISelectable.cs" />
     <Compile Include="Controls\Link.cs" />
     <Compile Include="Controls\LinkToolTip.cs" />
+    <Compile Include="Controls\ObjectEventArgs.cs" />
     <Compile Include="Controls\Station.xaml.cs">
       <DependentUpon>Station.xaml</DependentUpon>
     </Compile>
@@ -73,6 +77,10 @@
     <Compile Include="Controls\WorkArea\WorkAreaModeBase.cs" />
     <Compile Include="Controls\ControlType.cs" />
     <Compile Include="IControl.cs" />
+    <Compile Include="Model\ControlAddedEventArgs.cs" />
+    <Compile Include="Model\ControlRemovedEventArgs.cs" />
+    <Compile Include="Model\FeaturedItem.cs" />
+    <Compile Include="Model\FeaturedItemPropertyDescriptor.cs" />
     <Compile Include="Model\FeaturesModel.cs" />
     <Compile Include="Model\GraphicModel.cs" />
     <Compile Include="Serialization\TaskModelExporter.cs" />
@@ -82,8 +90,11 @@
     <Compile Include="Windows\NameRequestWindow.xaml.cs">
       <DependentUpon>NameRequestWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\WorkArea\WorkArea.cs" />
     <Page Include="Controls\Consumer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\GraphControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

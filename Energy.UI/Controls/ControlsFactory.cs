@@ -5,8 +5,8 @@ namespace Energy.UI.Controls
 {
     public class ControlsFactory
     {
-        public event EventHandler<WantDeleteItemEventArgs<ControlBase>> WantDeleteControl;
-        public event EventHandler<WantDeleteItemEventArgs<Link>> WantDeleteLink;
+        public event EventHandler<ObjectEventArgs<ControlBase>> WantDeleteControl;
+        public event EventHandler<ObjectEventArgs<Link>> WantDeleteLink;
         
         public ControlBase CreateControl(ControlType controlType, string name)
         {
@@ -43,22 +43,12 @@ namespace Energy.UI.Controls
 
         private void Link_WantDelete(object sender, EventArgs e)
         {
-            WantDeleteLink?.Invoke(this, new WantDeleteItemEventArgs<Link>(sender as Link));
+            WantDeleteLink?.Invoke(this, new ObjectEventArgs<Link>(sender as Link));
         }
 
         private void Control_WantDelete(object sender, EventArgs e)
         {
-            WantDeleteControl?.Invoke(this, new WantDeleteItemEventArgs<ControlBase>(sender as ControlBase));
-        }
-    }
-
-    public class WantDeleteItemEventArgs<T> : EventArgs
-    {
-        public T Item { get; set; }
-
-        public WantDeleteItemEventArgs(T item)
-        {
-            Item = item;
+            WantDeleteControl?.Invoke(this, new ObjectEventArgs<ControlBase>(sender as ControlBase));
         }
     }
 }

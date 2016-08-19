@@ -10,14 +10,14 @@ namespace Energy.UI.Serialization
         {
             var builder = new StringBuilder();
 
-            builder.AppendLine(string.Join(",", taskModel.FeaturesNames));
-            builder.AppendLine(string.Join(",", taskModel.Stations.Select(s => s.Name)));
-            builder.AppendLine(string.Join(",", taskModel.Consumers.Select(c => c.Name)));
-            foreach (var station in taskModel.Stations)
+            builder.AppendLine(string.Join(",", taskModel.FeaturesModel.FeaturesNames));
+            builder.AppendLine(string.Join(",", taskModel.FeaturesModel.Stations.Select(s => s.Name)));
+            builder.AppendLine(string.Join(",", taskModel.FeaturesModel.Consumers.Select(c => c.Name)));
+            foreach (var station in taskModel.FeaturesModel.Stations)
             {
                 builder.AppendLine(station.Serialize());
             }
-            foreach (var consumer in taskModel.Consumers)
+            foreach (var consumer in taskModel.FeaturesModel.Consumers)
             {
                 builder.AppendLine(consumer.Serialize());
             }
@@ -28,13 +28,13 @@ namespace Energy.UI.Serialization
         //Матрица потребителей
         public static double[,] GetRMatrix(TaskModel taskModel)
         {
-            var rowsCount = taskModel.Consumers.Count;
-            var columnsNames = taskModel.FeaturesNames;
+            var rowsCount = taskModel.FeaturesModel.Consumers.Count;
+            var columnsNames = taskModel.FeaturesModel.FeaturesNames;
             var columnsCount = columnsNames.Count;
             var result = new double[rowsCount, columnsCount];
 
             var row = 0;
-            foreach (var consumer in taskModel.Consumers)
+            foreach (var consumer in taskModel.FeaturesModel.Consumers)
             {
                 var column = 0;
                 foreach (var columnsName in columnsNames)
@@ -50,13 +50,13 @@ namespace Energy.UI.Serialization
         //Матрица станций
         public static double[,] GetSMatrix(TaskModel taskModel)
         {
-            var columnsCount = taskModel.Stations.Count;
-            var columnsNames = taskModel.FeaturesNames;
+            var columnsCount = taskModel.FeaturesModel.Stations.Count;
+            var columnsNames = taskModel.FeaturesModel.FeaturesNames;
             var rowsCount = columnsNames.Count;
             var result = new double[rowsCount, columnsCount];
 
             var row = 0;
-            foreach (var station in taskModel.Stations)
+            foreach (var station in taskModel.FeaturesModel.Stations)
             {
                 var column = 0;
                 foreach (var columnsName in columnsNames)

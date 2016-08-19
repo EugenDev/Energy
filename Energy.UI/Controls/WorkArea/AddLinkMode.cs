@@ -2,7 +2,7 @@
 {
     public class AddLinkMode : WorkAreaModeBase
     {
-        public AddLinkMode(WorkArea workArea) : base(workArea)
+        public AddLinkMode(GraphControl graphControl) : base(graphControl)
         {
         }
 
@@ -22,9 +22,9 @@
 
             if (_fromElement != null && _fromElement != selectedElement)
             {
-                WorkArea.ClearSelection();
-                WorkArea.LinkElements(_fromElement, selectedElement);
-                WorkArea.SetStartMode();
+                GraphControl.ClearSelection();
+                GraphControl.LinkElements(_fromElement, selectedElement);
+                GraphControl.SetStartMode();
                 return;
             }
 
@@ -38,7 +38,7 @@
                 _fromElement = selectedElement;
             }
 
-            WorkArea.ToggleElementSelection(selectedElement);
+            GraphControl.ToggleElementSelection(selectedElement);
         }
     }
 }

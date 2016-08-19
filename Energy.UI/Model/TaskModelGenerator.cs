@@ -1,7 +1,6 @@
 ﻿using System;
-using Energy.UI.Model;
 
-namespace Energy.UI
+namespace Energy.UI.Model
 {
     public class TaskModelGenerator
     {
@@ -15,28 +14,28 @@ namespace Energy.UI
 
             for (int i = 0; i < stationsCount; i++)
             {
-                result.AddStation("Station_" + i);
+                result.FeaturesModel.AddStation("Station_" + i);
             }
             for (int i = 0; i < customersCount; i++)
             {
-                result.AddConsumer("Consumer" + i);
+                result.FeaturesModel.AddConsumer("Consumer" + i);
             }
             for (int i = 0; i < commonFeaturesCount; i++)
             {
-                result.AddFeature("Feature_" + i);
+                result.FeaturesModel.AddFeature("Feature_" + i);
             }
-            foreach (var station in result.Stations)
+            foreach (var station in result.FeaturesModel.Stations)
             {
-                foreach (var stationFeature in result.FeaturesNames)
+                foreach (var stationFeature in result.FeaturesModel.FeaturesNames)
                     station[stationFeature] = Math.Round(r.NextDouble(), 1);
-                foreach (var commonFeature in result.FeaturesNames)
+                foreach (var commonFeature in result.FeaturesModel.FeaturesNames)
                     station[commonFeature] = Math.Round(r.NextDouble(), 1);
             }
-            foreach (var consumer in result.Consumers)
+            foreach (var consumer in result.FeaturesModel.Consumers)
             {
-                foreach (var consumerFeature in result.FeaturesNames)
+                foreach (var consumerFeature in result.FeaturesModel.FeaturesNames)
                     consumer[consumerFeature] = Math.Round(r.NextDouble(), 1);
-                foreach (var commonFeature in result.FeaturesNames)
+                foreach (var commonFeature in result.FeaturesModel.FeaturesNames)
                     consumer[commonFeature] = Math.Round(r.NextDouble(), 1);
             }
             return result;
