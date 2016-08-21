@@ -8,15 +8,17 @@ namespace Energy.UI.Controls
 {
     public class ControlBase : UserControl, IControl, ISelectable
     {
-        public ControlBase()
+        public ControlBase(string name)
         {
             X = Y = 0;
             IsSelected = false;
             Links = new List<Link>();
             ContextMenu = CreateContextMenu();
+            DataContext = this;
+            Caption = name;
         }
 
-        public string ControlName { get; set; }
+        public string Caption { get; set; }
 
         public List<Link> Links { get; private set; }
 

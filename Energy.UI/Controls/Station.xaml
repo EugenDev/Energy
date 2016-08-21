@@ -8,7 +8,7 @@
     <Grid>
         <Polygon Points="6,94 94,94 85,10 80,10 75,85 70,85 70,50 6,50" Fill="Black" Stroke="Black" />
         <Polygon Points="41,60 45,60 40,70 45,70 34,83 38,74 35,74" Fill="Yellow" Stroke="White" />
-        <TextBlock Name="NameTextBlock" Text="Станция" Margin="5" />
+        <TextBlock Name="NameTextBlock" Text="{Binding Caption}" Margin="5" />
         <Rectangle Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
     </Grid>
 </local:ControlBase>

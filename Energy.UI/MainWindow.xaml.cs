@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Energy.UI.Controls;
-using Energy.UI.Controls.WorkArea;
 using Energy.UI.Model;
 using Energy.UI.Serialization;
 using Energy.UI.Windows;
@@ -27,8 +27,6 @@ namespace Energy.UI
         public MainWindow()
         {
             InitializeComponent();
-            PreviewKeyUp += GraphControl.ProcessKeyUp;
-            PreviewKeyDown += GraphControl.ProcessKeyDown;
             TaskModel = new TaskModel();
         }
 
@@ -46,23 +44,13 @@ namespace Energy.UI
             }
             return null;
         }
-        
-        private void AddFeature_OnClick(object sender, RoutedEventArgs e)
-        {
-            var requestedName = RequestName();
-            if (!string.IsNullOrWhiteSpace(requestedName))
-            {
-                TaskModel.FeaturesModel.AddFeature(requestedName);
-                RefreshColumns();
-            }
-        }
 
         private void RemoveFeature_Click(object sender, RoutedEventArgs e)
         {
-            var selectedColumn = ConsumersDataGrid.SelectedCells[0].Column;
-            var featureName = ((selectedColumn as DataGridTextColumn).Binding as Binding).Path.Path;
-            TaskModel.FeaturesModel.RemoveFeature(featureName);
-            RefreshColumns();
+            //var selectedColumn = ConsumersDataGrid.SelectedCells[0].Column;
+            //var featureName = ((selectedColumn as DataGridTextColumn).Binding as Binding).Path.Path;
+            //TaskModel.FeaturesModel.RemoveFeature(featureName);
+            //RefreshColumns();
         }
 
         private DataGridTextColumn CreateFeatureColumn(string featureName)
@@ -148,7 +136,6 @@ namespace Energy.UI
                 var sMatrix = TaskModelExporter.GetSMatrix(TaskModel);
 
                 var result = Solver.Solve(rMatrix, sMatrix);
-                //Представить расчёты
             }
             catch (Exception ex)
             {
@@ -156,34 +143,49 @@ namespace Energy.UI
             }
         }
         
-        private void TestMenuItem_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void TestMenuItem1_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-        }
-        
-        private static int _controlsCounter;
+            var collection = new List<ModelBase>
+            {
+                new StationModel("Станция 1") {IsSelected = true},
+                new StationModel("Станция 2") {IsSelected = false, X = 200},
+                new ConsumerModel("Клиент 1") {IsSelected = true, Y = 200},
+                new ConsumerModel("Клиент 1") {IsSelected = false, X = 200, Y = 200}
+            };
 
+            GraphControl.ItemsSource = collection;
+        }
+
+        private static int _stationsCounter;
         private void AddStation_OnClick(object sender, RoutedEventArgs e)
         {
-            var name = "Station_" + _controlsCounter++;
-            GraphControl.AddElement(name, ControlType.Station);
-            TaskModel.FeaturesModel.AddStation(name);
+            var name = "Station_" + _stationsCounter++;
+            TaskModel.AddParticipant(name, ParticipantType.Station);
         }
 
+        private static int _consumersCounter;
         private void AddConsumer_OnClick(object sender, RoutedEventArgs e)
         {
-            var name = "Consumer_" + _controlsCounter++;
-            GraphControl.AddElement(name, ControlType.Consumer);
-            TaskModel.FeaturesModel.AddConsumer(name);
+            var name = "Consumer_" + _consumersCounter++;
+            TaskModel.AddParticipant(name, ParticipantType.Consumer);
         }
 
-        private void AddLink_OnClick(object sender, RoutedEventArgs e)
+        private static int _featuresCounter;
+        private void AddFeature_OnClick(object sender, RoutedEventArgs e)
         {
-            GraphControl.StartAddLink();
+            var name = "Feature_" + _featuresCounter++;
+            TaskModel.AddFeature(name);
+            //TODO: Перестраивать колонки
+        }
+
+        private void TestMenuItem2_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
         }
     }
 }
 
-//Калькулятор растояний - даём ему граф, он считает все расстояния и мы потом только спрашиваем
-//Экспортировать и импортировать график и таблицы
-//Менять курср если находимся в режиме добавления связи.
-//Убрать инфу о ссылках из контролов. Сделать слежение на уровне WorkArea
+//TODO: Калькулятор растояний - даём ему граф, он считает все расстояния и мы потом только спрашиваем
+//TODO:Экспортировать и импортировать график и таблицы
+//TODO:Менять курср если находимся в режиме добавления связи.
+//TODO:Убрать инфу о ссылках из контролов. Сделать слежение на уровне WorkArea
+//TODO:Убрать MenuItem для ссылки, сделать режим для автомата

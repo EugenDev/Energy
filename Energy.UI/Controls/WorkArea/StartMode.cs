@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Input;
+using Energy.UI.Model;
 
 namespace Energy.UI.Controls.WorkArea
 {
@@ -12,7 +12,8 @@ namespace Energy.UI.Controls.WorkArea
 
         public override void MouseLeftButtonUp()
         {
-            GraphControl.ClearSelection();
+            if(GraphControl.SelectedElements.Count != 0)
+                GraphControl.ToggleElementSelection(hitElement);
         }
 
         public override void MouseLeftButtonDown()
@@ -24,21 +25,15 @@ namespace Energy.UI.Controls.WorkArea
         {
             if(e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
                 GraphControl.SetMode(new MultiselectMode(GraphControl));
-
-            if (e.Key == Key.Delete)
-                GraphControl.DeleteSelected();
         }
 
-        protected override void ProcessHitTest(ControlBase element)
+        private ModelBase hitElement;
+        protected override void ProcessHitTest(ModelBase element)
         {
-            if(!(element is ISelectable))
-                return;
-            
-            var selectedElements = GraphControl.SelectedControls.Count != 0
-                ? GraphControl.SelectedControls.Cast<ControlBase>().ToList()
-                : new List<ControlBase> {element };
-
-            GraphControl.SetMode(new DragMode(GraphControl, selectedElements));
+            hitElement = element;
+            GraphControl.ClearSelection();
+            GraphControl.ToggleElementSelection(element);
+            GraphControl.SetMode(new DragMode(GraphControl));
         }
     }
 }

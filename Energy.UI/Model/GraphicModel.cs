@@ -6,24 +6,24 @@ namespace Energy.UI.Model
 {
     public class GraphicModel
     {
-        public ObservableCollection<ControlBase> Controls { get; }
+        public ObservableCollection<ModelBase> Elements { get; }
 
         public GraphicModel()
         {
-            Controls = new ObservableCollection<ControlBase>();
+            Elements = new ObservableCollection<ModelBase>();
         }
 
-        private void OnControlAdded(ControlBase control, ControlType controlType)
-        {
-            ControlAdded?.Invoke(this, new ControlAddedEventArgs(control, controlType));
-        }
+        //private void OnControlAdded(ControlBase control, ParticipantType ParticipantType)
+        //{
+        //    ControlAdded?.Invoke(this, new ControlAddedEventArgs(control, ParticipantType));
+        //}
 
-        public void OnControlRemoved(ControlBase control, ControlType controlType)
-        {
-            ControlRemoved?.Invoke(this, new ControlRemovedEventArgs(control, controlType));
-        }
+        //public void OnControlRemoved(ControlBase control, ParticipantType ParticipantType)
+        //{
+        //    ControlRemoved?.Invoke(this, new ControlRemovedEventArgs(control, ParticipantType));
+        //}
 
-        public event EventHandler<ControlAddedEventArgs> ControlAdded;
-        public event EventHandler<ControlRemovedEventArgs> ControlRemoved;
+        //public event EventHandler<ControlAddedEventArgs> ControlAdded;
+        //public event EventHandler<ControlRemovedEventArgs> ControlRemoved;
     }
 }

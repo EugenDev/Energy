@@ -7,7 +7,7 @@
              mc:Ignorable="d" Height="50" Width="100">
     <Grid>
         <Border BorderThickness="2" BorderBrush="Black" Background="LightSalmon" CornerRadius="10">
-            <TextBlock Name="NameTextBlock" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Path=ControlName}" VerticalAlignment="Center" />
+            <TextBlock Name="NameTextBlock" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Caption}" VerticalAlignment="Center" />
         </Border>
         <Rectangle RadiusX="10" RadiusY="10" Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
     </Grid>

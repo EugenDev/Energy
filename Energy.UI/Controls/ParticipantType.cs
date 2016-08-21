@@ -1,6 +1,6 @@
 ﻿namespace Energy.UI.Controls
 {
-    public enum ControlType
+    public enum ParticipantType
     {
         Station,
         Consumer

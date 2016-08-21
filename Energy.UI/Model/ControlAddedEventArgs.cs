@@ -4,12 +4,12 @@ namespace Energy.UI.Model
 {
     public class ControlAddedEventArgs : ObjectEventArgs<ControlBase>
     {
-        public ControlType ControlType { get; }
+        public ParticipantType ParticipantType { get; }
 
-        public ControlAddedEventArgs(ControlBase item, ControlType controlType) 
+        public ControlAddedEventArgs(ControlBase item, ParticipantType participantType) 
             : base(item)
         {
-            ControlType = controlType;
+            ParticipantType = participantType;
         }
     }
 }

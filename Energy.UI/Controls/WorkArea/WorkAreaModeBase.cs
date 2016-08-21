@@ -2,19 +2,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Energy.UI.Model;
 
 namespace Energy.UI.Controls.WorkArea
 {
     public abstract class WorkAreaModeBase
     {
         protected readonly GraphControl GraphControl;
-        protected Canvas Canvas => GraphControl.Canvas;
-
-        protected Point GetCurrentPoint()
-        {
-            return Mouse.GetPosition(Canvas);
-        }
-
+        
         protected WorkAreaModeBase(GraphControl graphControl)
         {
             GraphControl = graphControl;
@@ -22,20 +17,36 @@ namespace Energy.UI.Controls.WorkArea
 
         protected void HitTest()
         {
-            var canvasHitPoint = Mouse.GetPosition(Canvas);
-            VisualTreeHelper.HitTest(Canvas,
+            var hitPoint = Mouse.GetPosition(GraphControl);
+            VisualTreeHelper.HitTest(GraphControl,
                 null,
                 result =>
                 {
-                    if (!(result.VisualHit is ControlBase))
-                        return HitTestResultBehavior.Continue;
-                    ProcessHitTest(result.VisualHit as ControlBase);
+                    var element = GetHittedItem(result.VisualHit);
+                    if(element != null)
+                        ProcessHitTest(element);
                     return HitTestResultBehavior.Stop;
                 },
-                new PointHitTestParameters(canvasHitPoint));
+                new PointHitTestParameters(hitPoint));
         }
 
-        protected virtual void ProcessHitTest(ControlBase hitElement) { }
+        private ModelBase GetHittedItem(DependencyObject currentElement)
+        {
+            while (true)
+            {
+                var parent = VisualTreeHelper.GetParent(currentElement);
+
+                if (parent == null)
+                    return null;
+
+                if (parent is ContentPresenter)
+                    return (parent as ContentPresenter).DataContext as ModelBase;
+
+                currentElement = parent;
+            }
+        }
+
+        protected virtual void ProcessHitTest(ModelBase element) { }
 
         public virtual void ProcessKeyUp(KeyEventArgs args) { }
 

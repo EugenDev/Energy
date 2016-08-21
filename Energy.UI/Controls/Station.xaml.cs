@@ -6,10 +6,9 @@
     public partial class Station : ControlBase
     {
         public Station(string name)
+            : base(name)
         {
             InitializeComponent();
-            ControlName = NameTextBlock.Text = name;
-            DataContext = this;
         }
     }
 }

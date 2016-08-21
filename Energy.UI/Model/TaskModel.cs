@@ -1,5 +1,4 @@
-﻿using System;
-using Energy.UI.Controls;
+﻿using Energy.UI.Controls;
 
 namespace Energy.UI.Model
 {
@@ -8,47 +7,32 @@ namespace Energy.UI.Model
         public FeaturesModel FeaturesModel { get; }
         public GraphicModel GraphicModel { get; }
 
+        private readonly ControlsFactory _controlsFactory;
+
         public TaskModel()
         {
             FeaturesModel = new FeaturesModel();
             GraphicModel = new GraphicModel();
 
-            GraphicModel.ControlAdded += GraphicModelOnControlAdded;
-            GraphicModel.ControlRemoved += GraphicModelOnControlRemoved;
-        }
-        
-        private void GraphicModelOnControlAdded(object sender, ControlAddedEventArgs controlAddedEventArgs)
-        {
-            switch (controlAddedEventArgs.ControlType)
-            {
-                case ControlType.Station:
-                    FeaturesModel.AddStation(controlAddedEventArgs.Item.ControlName);
-                    break;
-
-                case ControlType.Consumer:
-                    FeaturesModel.AddConsumer(controlAddedEventArgs.Item.ControlName);
-                    break;
-
-                default:
-                    throw new InvalidOperationException();
-            }
+            _controlsFactory = new ControlsFactory();
         }
 
-        private void GraphicModelOnControlRemoved(object sender, ControlRemovedEventArgs controlRemovedEventArgs)
+        public void AddParticipant(string name, ParticipantType participantType)
         {
-            switch (controlRemovedEventArgs.ControlType)
-            {
-                case ControlType.Station:
-                    FeaturesModel.RemoveStation(controlRemovedEventArgs.Item.ControlName);
-                    break;
+            //TODO: Check uniqueness
+            //var control = _controlsFactory.CreateControl(name, ParticipantType);
 
-                case ControlType.Consumer:
-                    FeaturesModel.RemoveConsumer(controlRemovedEventArgs.Item.ControlName);
-                    break;
+            if(participantType == ParticipantType.Station)
+                GraphicModel.Elements.Add(new StationModel(name));
+            else
+                GraphicModel.Elements.Add(new ConsumerModel(name));
 
-                default:
-                    throw new InvalidOperationException();
-            }
+            FeaturesModel.AddParticipant(name, participantType);
+        }
+
+        public void AddFeature(string featureName)
+        {
+            FeaturesModel.AddFeature(featureName);
         }
     }
 }

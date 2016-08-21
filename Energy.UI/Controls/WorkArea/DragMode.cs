@@ -7,23 +7,21 @@ namespace Energy.UI.Controls.WorkArea
     public class DragMode : WorkAreaModeBase
     {
         private readonly Point _startPoint;
-        private readonly List<ControlBase> _controls;
         private Vector _previousVector;
-
-        public DragMode(GraphControl graphControl, List<ControlBase> controls) : base(graphControl)
+        
+        public DragMode(GraphControl graphControl) : base(graphControl)
         {
-            _startPoint = GetCurrentPoint();
+            _startPoint = Mouse.GetPosition(GraphControl);
             _previousVector = new Vector();
-            _controls = controls;
-            Canvas.MouseMove += MouseMoveHandler;
+            GraphControl.MouseMove += MouseMoveHandler;
         }
 
         private void MouseMoveHandler(object sender, MouseEventArgs mouseEventArgs)
         {
-            var mousePosition = GetCurrentPoint();
+            var mousePosition = Mouse.GetPosition(GraphControl);
             var newVector = new Vector(mousePosition.X - _startPoint.X, mousePosition.Y - _startPoint.Y);
             var result = newVector - _previousVector;
-            foreach (var control in _controls)
+            foreach (var control in GraphControl.SelectedElements)
             {
                 control.Y += result.Y;
                 control.X += result.X;
@@ -33,7 +31,7 @@ namespace Energy.UI.Controls.WorkArea
 
         public override void MouseLeftButtonUp()
         {
-            Canvas.MouseMove -= MouseMoveHandler;
+            GraphControl.MouseMove -= MouseMoveHandler;
             GraphControl.SetStartMode();
         }
     }

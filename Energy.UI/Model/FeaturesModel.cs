@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Energy.UI.Controls;
 
 namespace Energy.UI.Model
 {
@@ -17,38 +18,43 @@ namespace Energy.UI.Model
             Stations = new ObservableCollection<FeaturedItem>();
             Consumers = new ObservableCollection<FeaturedItem>();
         }
+        
+        public void AddParticipant(string name, ParticipantType participantType)
+        {
+            switch (participantType)
+            {
+                case ParticipantType.Consumer:
+                    AddConsumer(name);
+                    break;
+
+                case ParticipantType.Station:
+                    AddStation(name);
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Unhandled enum value");
+            }
+        }
 
         public void AddStation(string name)
         {
-            if(Stations.Any(x => x.Name.Equals(name)))
-                throw new InvalidOperationException("Такая станция уже есть");
-
             Stations.Add(new FeaturedItem(name, FeaturesNames));
         }
 
         public void AddConsumer(string name)
         {
-            if (Consumers.Any(x => x.Name.Equals(name)))
-                throw new InvalidOperationException("Такая станция уже есть");
-
             Consumers.Add(new FeaturedItem(name, FeaturesNames));
         }
 
         public void RemoveStation(string name)
         {
             var removedStation = Stations.First(x => x.Name.Equals(name));
-            if(removedStation == null)
-                throw new InvalidOperationException("Ошибка при удалении: нет такой станции");
-
             Stations.Remove(removedStation);
         }
 
         public void RemoveConsumer(string name)
         {
             var removedConsumer = Consumers.First(x => x.Name.Equals(name));
-            if (removedConsumer == null)
-                throw new InvalidOperationException("Ошибка при удалении: нет такого потребителя");
-
             Consumers.Remove(removedConsumer);
         }
 

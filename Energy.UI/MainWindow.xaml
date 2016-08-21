@@ -10,7 +10,7 @@
         Title="MainWindow" Height="500" Width="800">
 
     <Window.DataContext>
-        <model:TaskModel />
+        <model:TaskModel/>
     </Window.DataContext>
 
     <Window.Resources>
@@ -52,65 +52,43 @@
             <MenuItem Header="Добавить">
                 <MenuItem Name="AddStation" Header="Станцию" Click="AddStation_OnClick" />
                 <MenuItem Name="AddConsumer" Header="Потребителя" Click="AddConsumer_OnClick"/>
-                <MenuItem Name="AddLink" Header="Связь" Click="AddLink_OnClick" />
+                <MenuItem Name="AddFeature" Header="Фичу" Click="AddFeature_OnClick" />
             </MenuItem>
             <MenuItem Header="Тест">
                 <MenuItem Name="GenerateDataMenuItem"  Header="Сгенерировать данные" Click="GenerateDataMenuItem_OnClick"/>
-                <MenuItem Name="TestMenuItem" Header="Просто тест" Click="TestMenuItem_OnClickestMenuItem_OnClick" />
+                <MenuItem Name="TestMenuItem1" Header="Просто тест 1" Click="TestMenuItem1_OnClickestMenuItem_OnClick" />
+                <MenuItem Name="TestMenuItem2" Header="Просто тест 2" Click="TestMenuItem2_OnClickestMenuItem_OnClick" />
             </MenuItem>
         </Menu>
 
         <TabControl Grid.Row="1">
             <TabItem Header="Визуализация">
-                <controls:GraphControl x:Name="GraphControl" />
+                <controls:GraphControl x:Name="GraphControl" ItemsSource="{Binding GraphicModel.Elements, Mode=OneWay}" />
             </TabItem>
             
             <TabItem Header="Станции">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0">
-                        <Button x:Name="AddFeatureOnStation" Content="Добавить фичу" Margin="2" Click="AddFeature_OnClick" />
-                        <Button x:Name="RemoveFeatureOnStation" Content="Удалить фичу" Margin="2" Click="RemoveFeature_Click" />
-                    </StackPanel>
-                    <DataGrid x:Name="StationsDataGrid" Grid.Column="1" ItemsSource="{Binding Stations}" />
-                </Grid>
+                <DataGrid x:Name="StationsDataGrid" ItemsSource="{Binding FeaturesModel.Stations}" />
             </TabItem>
 
             <TabItem Header="Потребители">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    
-                    <StackPanel Grid.Column="0">
-                        <Button x:Name="AddFeatureOnConsumer" Content="Добавить фичу" Margin="2" Click="AddFeature_OnClick" />
-                        <Button x:Name="RemoveFeatureOnConsumer" Content="Удалить фичу" Margin="2" Click="RemoveFeature_Click" />
-                    </StackPanel>
-                    <DataGrid x:Name="ConsumersDataGrid" Grid.Column="1" ItemsSource="{Binding Consumers}" />
-                </Grid>
+                <DataGrid x:Name="ConsumersDataGrid" ItemsSource="{Binding FeaturesModel.Consumers}" />
             </TabItem>
             
             <TabItem Header="Результат">
                 <Label Content="Тут пока ничего нет ..." VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
             </TabItem>
 
-
         </TabControl>
         
         <StatusBar Grid.Row="2">
             <StatusBarItem>
-                <TextBlock Text="{Binding Stations.Count, StringFormat='Станций: \{0\}'}" />
+                <TextBlock Text="{Binding FeaturesModel.Stations.Count, StringFormat='Станций: \{0\}'}" />
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="{Binding Consumers.Count, StringFormat='Потребителей: \{0\}'}" />
+                <TextBlock Text="{Binding FeaturesModel.Consumers.Count, StringFormat='Потребителей: \{0\}'}" />
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="{Binding CommonFeatureNames.Count, StringFormat='Фич: \{0\}'}" />
+                <TextBlock Text="{Binding FeaturesModel.FeaturesNames.Count, StringFormat='Фич: \{0\}'}" />
             </StatusBarItem>
         </StatusBar>
     </Grid>

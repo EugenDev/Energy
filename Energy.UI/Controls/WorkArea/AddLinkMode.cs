@@ -1,4 +1,6 @@
-﻿namespace Energy.UI.Controls.WorkArea
+﻿using Energy.UI.Model;
+
+namespace Energy.UI.Controls.WorkArea
 {
     public class AddLinkMode : WorkAreaModeBase
     {
@@ -13,12 +15,12 @@
             HitTest();
         }
 
-        protected override void ProcessHitTest(ControlBase hitElement)
+        protected override void ProcessHitTest(ModelBase element)
         {
-            if(!(hitElement is ISelectable))
+            if(!(element is ISelectable))
                 return;
 
-            var selectedElement = (ISelectable) hitElement;
+            var selectedElement = (ISelectable) element;
 
             if (_fromElement != null && _fromElement != selectedElement)
             {
@@ -38,7 +40,7 @@
                 _fromElement = selectedElement;
             }
 
-            GraphControl.ToggleElementSelection(selectedElement);
+            //GraphControl.ToggleElementSelection(selectedElement);
         }
     }
 }

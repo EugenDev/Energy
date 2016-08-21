@@ -1,77 +1,63 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Energy.UI.Controls.WorkArea;
+using Energy.UI.Model;
 
 namespace Energy.UI.Controls
 {
     /// <summary>
     /// Interaction logic for GraphControl.xaml
     /// </summary>
-    public partial class GraphControl : UserControl
+    public partial class GraphControl : ItemsControl
     {
-        public Canvas Canvas => MainCanvas;
+        //public Canvas Canvas => new Canvas();
 
-        private readonly ControlsFactory _controlsFactory;
         public WorkAreaModeBase Mode { get; private set; }
-        public HashSet<ISelectable> SelectedControls { get; }
-        private Dictionary<ControlBase, List<Link>> Links { get; }
+        public HashSet<ModelBase> SelectedElements { get; }
+        //private Dictionary<ControlBase, List<Link>> Links { get; }
 
         public GraphControl()
         {
             InitializeComponent();
 
-            SelectedControls = new HashSet<ISelectable>();
-            Links = new Dictionary<ControlBase, List<Link>>();
-            Mode = new StartMode(this);
-
-            _controlsFactory = new ControlsFactory();
-            _controlsFactory.WantDeleteLink += ControlsFactoryOnWantDeleteLink;
-            _controlsFactory.WantDeleteControl += ControlsFactoryOnWantDeleteControl;
-
-            Canvas.MouseLeftButtonDown += CanvasOnMouseLeftButtonDown;
-            Canvas.MouseLeftButtonUp += CanvasOnMouseLeftButtonUp;
+            SetStartMode();
+            SelectedElements = new HashSet<ModelBase>();
+            Loaded += GraphControl_Loaded;
+            //Links = new Dictionary<ControlBase, List<Link>>();
         }
 
-        public void AddControl(string name, ControlType controlType)
+        private void GraphControl_Loaded(object sender, RoutedEventArgs e)
         {
+            var window = Window.GetWindow(this);
+            if(window == null)
+                throw new InvalidOperationException("No window found for GraphicControl");
 
+            window.KeyDown += OnKeyDown;
+            window.KeyUp += OnKeyUp;
         }
         
-        private void ControlsFactoryOnWantDeleteControl(object sender, ObjectEventArgs<ControlBase> wantDeleteControlEventArgs)
-        {
-            DeleteControl(wantDeleteControlEventArgs.Item);
-        }
+        //private void DeleteControl(ControlBase control)
+        //{
+        //    if (Links.ContainsKey(control))
+        //    {
+        //        var links = Links[control].ToList();
+        //        foreach (var link in links)
+        //        {
+        //            Links[link.From].Remove(link);
+        //            Links[link.To].Remove(link);
+        //            Canvas.Children.Remove(link);
+        //        }
+        //        Links.Remove(control);
+        //    }
 
-        private void DeleteControl(ControlBase control)
-        {
-            if (Links.ContainsKey(control))
-            {
-                var links = Links[control].ToList();
-                foreach (var link in links)
-                {
-                    Links[link.From].Remove(link);
-                    Links[link.To].Remove(link);
-                    Canvas.Children.Remove(link);
-                }
-                Links.Remove(control);
-            }
+        //    Canvas.Children.Remove(control);
 
-            Canvas.Children.Remove(control);
-
-        }
-
-        private void ControlsFactoryOnWantDeleteLink(object sender, ObjectEventArgs<Link> e)
-        {
-            if (Links.ContainsKey(e.Item.From))
-                Links[e.Item.From].Remove(e.Item);
-
-            if (Links.ContainsKey(e.Item.To))
-                Links[e.Item.To].Remove(e.Item);
-
-            Canvas.Children.Remove(e.Item);
-        }
+        //}
 
         public void SetStartMode()
         {
@@ -83,53 +69,48 @@ namespace Energy.UI.Controls
             Mode?.Cleanup();
             Mode = mode;
         }
-
-        private void CanvasOnMouseLeftButtonUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             Mode.MouseLeftButtonUp();
         }
 
-        private void CanvasOnMouseLeftButtonDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             Mode.MouseLeftButtonDown();
         }
 
-        public void ProcessKeyUp(object sender, KeyEventArgs e)
+        protected void OnKeyUp(object sender, KeyEventArgs e)
         {
             Mode.ProcessKeyUp(e);
         }
 
-        public void ProcessKeyDown(object sender, KeyEventArgs e)
+        protected void OnKeyDown(object sender, KeyEventArgs e)
         {
             Mode.ProcessKeyDown(e);
         }
-
-        public void AddElement(string name, ControlType controlType)
+        
+        public void ToggleElementSelection(ModelBase element)
         {
-            Canvas.Children.Add(_controlsFactory.CreateControl(controlType, name));
+            if (SelectedElements.Contains(element))
+            {
+                SelectedElements.Remove(element);
+                element.IsSelected = false;
+            }
+            else
+            {
+                SelectedElements.Add(element);
+                element.IsSelected = true;
+            }
         }
 
         public void ClearSelection()
         {
-            foreach (var control in SelectedControls)
+            foreach (var control in SelectedElements)
             {
-                control.Unselect();
+                control.IsSelected = false;
             }
-            SelectedControls.Clear();
-        }
-
-        public void ToggleElementSelection(ISelectable element)
-        {
-            if (SelectedControls.Contains(element))
-            {
-                SelectedControls.Remove(element);
-                element.Unselect();
-            }
-            else
-            {
-                SelectedControls.Add(element);
-                element.Select();
-            }
+            SelectedElements.Clear();
         }
 
         public void StartAddLink()
@@ -140,32 +121,32 @@ namespace Energy.UI.Controls
 
         public void LinkElements(ISelectable fromElement, ISelectable selectedElement)
         {
-            var from = (ControlBase)fromElement;
-            var to = (ControlBase)selectedElement;
-            var link = _controlsFactory.CreateLink(from, to, 10.0);
-            Canvas.Children.Add(link);
-            CollectLink(from, link);
-            CollectLink(to, link);
+            //var from = (ControlBase)fromElement;
+            //var to = (ControlBase)selectedElement;
+            //var link = _controlsFactory.CreateLink(from, to, 10.0);
+            //Canvas.Children.Add(link);
+            //CollectLink(from, link);
+            //CollectLink(to, link);
         }
 
-        private void CollectLink(ControlBase element, Link link)
-        {
-            if (!Links.ContainsKey(element))
-            {
-                Links[element] = new List<Link>();
-            }
-            Links[element].Add(link);
-        }
+        //private void CollectLink(ControlBase element, Link link)
+        //{
+        //    if (!Links.ContainsKey(element))
+        //    {
+        //        Links[element] = new List<Link>();
+        //    }
+        //    Links[element].Add(link);
+        //}
 
-        public void DeleteSelected()
-        {
-            foreach (var control in SelectedControls)
-            {
-                var element = control as ControlBase;
-                DeleteControl(element);
-            }
-            ClearSelection();
-            SetStartMode();
-        }
+        //public void DeleteSelected()
+        //{
+        //    foreach (var control in SelectedElements)
+        //    {
+        //        var element = control as ControlBase;
+        //        DeleteControl(element);
+        //    }
+        //    ClearSelection();
+        //    SetStartMode();
+        //}
     }
 }

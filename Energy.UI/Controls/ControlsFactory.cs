@@ -8,17 +8,17 @@ namespace Energy.UI.Controls
         public event EventHandler<ObjectEventArgs<ControlBase>> WantDeleteControl;
         public event EventHandler<ObjectEventArgs<Link>> WantDeleteLink;
         
-        public ControlBase CreateControl(ControlType controlType, string name)
+        public ControlBase CreateControl(string name, ParticipantType participantType)
         {
             ControlBase result;
 
-            switch (controlType)
+            switch (participantType)
             {
-                case ControlType.Station:
+                case ParticipantType.Station:
                     result = new Station(name);
                     ConfigureControl(result);
                     return result;
-                case ControlType.Consumer:
+                case ParticipantType.Consumer:
                     result = new Consumer(name);
                     ConfigureControl(result);
                     return result;

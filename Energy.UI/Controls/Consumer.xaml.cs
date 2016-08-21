@@ -6,10 +6,9 @@
     public partial class Consumer : ControlBase
     {
         public Consumer(string name)
+            : base(name)
         {
             InitializeComponent();
-            ControlName = NameTextBlock.Text = name;
-            DataContext = this;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using Energy.UI.Model;
 
 namespace Energy.UI.Controls.WorkArea
 {
@@ -13,13 +14,9 @@ namespace Energy.UI.Controls.WorkArea
             HitTest();
         }
 
-        protected override void ProcessHitTest(ControlBase hitElement)
+        protected override void ProcessHitTest(ModelBase element)
         {
-            if(!(hitElement is ISelectable))
-                return;
-
-            var selectable = hitElement as ISelectable;
-            GraphControl.ToggleElementSelection(selectable);
+           GraphControl.ToggleElementSelection(element);
         }
 
         public override void ProcessKeyUp(KeyEventArgs args)
