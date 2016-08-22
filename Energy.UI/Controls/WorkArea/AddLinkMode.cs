@@ -1,4 +1,5 @@
-﻿using Energy.UI.Model;
+﻿using System.Windows.Input;
+using Energy.UI.Model;
 
 namespace Energy.UI.Controls.WorkArea
 {
@@ -6,41 +7,41 @@ namespace Energy.UI.Controls.WorkArea
     {
         public AddLinkMode(GraphControl graphControl) : base(graphControl)
         {
+            GraphControl.Cursor = Cursors.Cross;
         }
-
-        private ISelectable _fromElement;
-
+        
         public override void MouseLeftButtonUp()
         {
             HitTest();
         }
 
+        private ModelBase _fromElement;
+
         protected override void ProcessHitTest(ModelBase element)
         {
-            if(!(element is ISelectable))
-                return;
-
-            var selectedElement = (ISelectable) element;
-
-            if (_fromElement != null && _fromElement != selectedElement)
-            {
-                GraphControl.ClearSelection();
-                GraphControl.LinkElements(_fromElement, selectedElement);
-                GraphControl.SetStartMode();
-                return;
-            }
-
-            if (_fromElement == selectedElement)
-            {
-                _fromElement = selectedElement;
-            }
-
             if (_fromElement == null)
             {
-                _fromElement = selectedElement;
+                _fromElement = element;
+                GraphControl.ToggleElementSelection(element);
+                return;
             }
 
-            //GraphControl.ToggleElementSelection(selectedElement);
+            if (_fromElement == element)
+                return;
+            
+            GraphControl.AddLink(_fromElement, element);
+        }
+
+        public override void ProcessKeyUp(KeyEventArgs args)
+        {
+            GraphControl.SetStartMode();
+        }
+
+        public override void Cleanup()
+        {
+            GraphControl.Cursor = Cursors.Arrow;
+            _fromElement = null;
+            GraphControl.ClearSelection();
         }
     }
 }

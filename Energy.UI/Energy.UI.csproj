@@ -55,35 +55,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\Consumer.xaml.cs">
-      <DependentUpon>Consumer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ControlBase.cs" />
     <Compile Include="Controls\ControlsFactory.cs" />
     <Compile Include="Controls\GraphControl.xaml.cs">
       <DependentUpon>GraphControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ISelectable.cs" />
-    <Compile Include="Controls\Link.cs" />
-    <Compile Include="Controls\LinkToolTip.cs" />
     <Compile Include="Controls\ObjectEventArgs.cs" />
-    <Compile Include="Controls\Station.xaml.cs">
-      <DependentUpon>Station.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\WorkArea\AddLinkMode.cs" />
     <Compile Include="Controls\WorkArea\DragMode.cs" />
-    <Compile Include="Controls\WorkArea\MultiselectMode.cs" />
     <Compile Include="Controls\WorkArea\StartMode.cs" />
     <Compile Include="Controls\WorkArea\WorkAreaModeBase.cs" />
     <Compile Include="Controls\ParticipantType.cs" />
+    <Compile Include="Converters\LinkToCenterCoodrinatesConverter.cs" />
     <Compile Include="IControl.cs" />
     <Compile Include="Model\ConsumerModel.cs" />
     <Compile Include="Model\ControlAddedEventArgs.cs" />
     <Compile Include="Model\ControlRemovedEventArgs.cs" />
+    <Compile Include="Converters\CoordinatesConverter.cs" />
+    <Compile Include="Converters\DataTypeConverter.cs" />
     <Compile Include="Model\FeaturedItem.cs" />
     <Compile Include="Model\FeaturedItemPropertyDescriptor.cs" />
     <Compile Include="Model\FeaturesModel.cs" />
     <Compile Include="Model\GraphicModel.cs" />
+    <Compile Include="Model\LinkModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\StationModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
@@ -94,15 +88,7 @@
     <Compile Include="Windows\NameRequestWindow.xaml.cs">
       <DependentUpon>NameRequestWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\Consumer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\GraphControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Station.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

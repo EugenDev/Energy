@@ -28,6 +28,12 @@ namespace Energy.UI
         {
             InitializeComponent();
             TaskModel = new TaskModel();
+            GraphControl.LinkAdded += GraphControl_LinkAdded;
+        }
+
+        private void GraphControl_LinkAdded(object sender, LinkAddedEventArgs e)
+        {
+            TaskModel.AddLink(e.From, e.To);
         }
 
         private string RequestName()
@@ -145,15 +151,15 @@ namespace Energy.UI
         
         private void TestMenuItem1_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var collection = new List<ModelBase>
-            {
-                new StationModel("Станция 1") {IsSelected = true},
-                new StationModel("Станция 2") {IsSelected = false, X = 200},
-                new ConsumerModel("Клиент 1") {IsSelected = true, Y = 200},
-                new ConsumerModel("Клиент 1") {IsSelected = false, X = 200, Y = 200}
-            };
+            //var collection = new List<ModelBase>
+            //{
+            //    new StationModel("Станция 1") {IsSelected = true},
+            //    new StationModel("Станция 2") {IsSelected = false, X = 200},
+            //    new ConsumerModel("Клиент 1") {IsSelected = true, Y = 200},
+            //    new ConsumerModel("Клиент 1") {IsSelected = false, X = 200, Y = 200}
+            //};
 
-            GraphControl.ItemsSource = collection;
+            //GraphControl.ItemsSource = collection;
         }
 
         private static int _stationsCounter;
@@ -186,6 +192,4 @@ namespace Energy.UI
 
 //TODO: Калькулятор растояний - даём ему граф, он считает все расстояния и мы потом только спрашиваем
 //TODO:Экспортировать и импортировать график и таблицы
-//TODO:Менять курср если находимся в режиме добавления связи.
 //TODO:Убрать инфу о ссылках из контролов. Сделать слежение на уровне WorkArea
-//TODO:Убрать MenuItem для ссылки, сделать режим для автомата

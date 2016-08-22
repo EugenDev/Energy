@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Energy.UI.Model;
 
 namespace Energy.UI.Controls.WorkArea
@@ -9,29 +8,20 @@ namespace Energy.UI.Controls.WorkArea
         public StartMode(GraphControl graphControl) : base(graphControl)
         {
         }
-
-        public override void MouseLeftButtonUp()
-        {
-            if(GraphControl.SelectedElements.Count != 0)
-                GraphControl.ToggleElementSelection(hitElement);
-        }
-
+        
         public override void MouseLeftButtonDown()
         {
             HitTest();
         }
 
-        public override void ProcessKeyDown(KeyEventArgs e)
+        public override void ProcessKeyDown(KeyEventArgs args)
         {
-            if(e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
-                GraphControl.SetMode(new MultiselectMode(GraphControl));
+            if (args.Key == Key.LeftShift)
+                GraphControl.SetMode(new AddLinkMode(GraphControl));
         }
 
-        private ModelBase hitElement;
         protected override void ProcessHitTest(ModelBase element)
         {
-            hitElement = element;
-            GraphControl.ClearSelection();
             GraphControl.ToggleElementSelection(element);
             GraphControl.SetMode(new DragMode(GraphControl));
         }

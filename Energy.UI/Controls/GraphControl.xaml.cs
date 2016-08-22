@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using Energy.UI.Controls.WorkArea;
 using Energy.UI.Model;
 
@@ -15,11 +14,8 @@ namespace Energy.UI.Controls
     /// </summary>
     public partial class GraphControl : ItemsControl
     {
-        //public Canvas Canvas => new Canvas();
-
         public WorkAreaModeBase Mode { get; private set; }
         public HashSet<ModelBase> SelectedElements { get; }
-        //private Dictionary<ControlBase, List<Link>> Links { get; }
 
         public GraphControl()
         {
@@ -28,36 +24,27 @@ namespace Energy.UI.Controls
             SetStartMode();
             SelectedElements = new HashSet<ModelBase>();
             Loaded += GraphControl_Loaded;
-            //Links = new Dictionary<ControlBase, List<Link>>();
+        }
+
+        public event EventHandler<LinkAddedEventArgs> LinkAdded;
+
+        internal void AddLink(ModelBase from, ModelBase to)
+        {
+            LinkAdded?.Invoke(this, new LinkAddedEventArgs(from, to));
         }
 
         private void GraphControl_Loaded(object sender, RoutedEventArgs e)
         {
-            var window = Window.GetWindow(this);
-            if(window == null)
-                throw new InvalidOperationException("No window found for GraphicControl");
+            if (!DesignerProperties.GetIsInDesignMode(this))
+            {
+                var window = Window.GetWindow(this);
+                if (window == null)
+                    throw new InvalidOperationException("No window found for GraphicControl");
 
-            window.KeyDown += OnKeyDown;
-            window.KeyUp += OnKeyUp;
+                window.KeyDown += OnKeyDown;
+                window.KeyUp += OnKeyUp;
+            }
         }
-        
-        //private void DeleteControl(ControlBase control)
-        //{
-        //    if (Links.ContainsKey(control))
-        //    {
-        //        var links = Links[control].ToList();
-        //        foreach (var link in links)
-        //        {
-        //            Links[link.From].Remove(link);
-        //            Links[link.To].Remove(link);
-        //            Canvas.Children.Remove(link);
-        //        }
-        //        Links.Remove(control);
-        //    }
-
-        //    Canvas.Children.Remove(control);
-
-        //}
 
         public void SetStartMode()
         {
@@ -113,40 +100,26 @@ namespace Energy.UI.Controls
             SelectedElements.Clear();
         }
 
-        public void StartAddLink()
+        public void AddLink()
         {
             ClearSelection();
             SetMode(new AddLinkMode(this));
         }
 
-        public void LinkElements(ISelectable fromElement, ISelectable selectedElement)
+        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            //var from = (ControlBase)fromElement;
-            //var to = (ControlBase)selectedElement;
-            //var link = _controlsFactory.CreateLink(from, to, 10.0);
-            //Canvas.Children.Add(link);
-            //CollectLink(from, link);
-            //CollectLink(to, link);
         }
+    }
 
-        //private void CollectLink(ControlBase element, Link link)
-        //{
-        //    if (!Links.ContainsKey(element))
-        //    {
-        //        Links[element] = new List<Link>();
-        //    }
-        //    Links[element].Add(link);
-        //}
+    public class LinkAddedEventArgs : EventArgs
+    {
+        public ModelBase From { get; private set; }
+        public ModelBase To { get; private set; }
 
-        //public void DeleteSelected()
-        //{
-        //    foreach (var control in SelectedElements)
-        //    {
-        //        var element = control as ControlBase;
-        //        DeleteControl(element);
-        //    }
-        //    ClearSelection();
-        //    SetStartMode();
-        //}
+        public LinkAddedEventArgs(ModelBase from, ModelBase to)
+        {
+            From = from;
+            To = to;
+        }
     }
 }

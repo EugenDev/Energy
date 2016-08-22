@@ -8,7 +8,7 @@ namespace Energy.Tests
     {
 		private const double Tolerance = 0.001;
 
-		[Test, Ignore]
+		[Test, Ignore("Нахер")]
 		public void TestGetT1()
 		{
 			var inputR = new[,]

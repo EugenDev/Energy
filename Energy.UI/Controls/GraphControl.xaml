@@ -3,8 +3,50 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:model="clr-namespace:Energy.UI.Model"
+             xmlns:converters="clr-namespace:Energy.UI.Converters"
+             ClipToBounds="True"
              mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
+
+    <ItemsControl.Resources>
+        <ContextMenu x:Key="DeleteElementMenuItem">
+            <MenuItem  Header="Удалить" Click="MenuItem_OnClick"/>
+        </ContextMenu>
+        
+        <converters:CoordinatesConverter x:Key="CoordinatesConverter" />
+        <converters:DataTypeConverter x:Key="DataTypeConverter" />
+        
+        <DataTemplate DataType="{x:Type model:StationModel}">
+            <Grid Width="100" Height="100">
+                <Polygon Points="6,94 94,94 85,10 80,10 75,85 70,85 70,50 6,50" Fill="Black" Stroke="Black" />
+                <Polygon Points="41,60 45,60 40,70 45,70 34,83 38,74 35,74" Fill="Yellow" Stroke="White" />
+                <TextBlock Text="{Binding Name}" Margin="5" />
+                <Rectangle Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
+            </Grid>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type model:ConsumerModel}">
+            <Grid Width="100" Height="50" ContextMenu="{StaticResource DeleteElementMenuItem}">
+                <Border BorderThickness="2" BorderBrush="Black" Background="LightSalmon" CornerRadius="10">
+                    <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Name}" VerticalAlignment="Center" />
+                </Border>
+                <Rectangle RadiusX="10" RadiusY="10" Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type model:LinkModel}">
+            <Line X1="{Binding Path=From.X, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                    Y1="{Binding Path=From.Y, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                    X2="{Binding Path=To.X, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                    Y2="{Binding Path=To.Y, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                    Stroke="DarkRed" StrokeThickness="2" ContextMenu="{StaticResource DeleteElementMenuItem}">
+                <Line.ToolTip>
+                    <ToolTip Content="{Binding Distance}" />
+                </Line.ToolTip>
+            </Line>
+        </DataTemplate>
+    </ItemsControl.Resources>
     
     <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
@@ -14,29 +56,12 @@
 
     <ItemsControl.ItemContainerStyle>
         <Style TargetType="ContentPresenter">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Converter={StaticResource DataTypeConverter}}" Value="{x:Type model:ModelBase}" ></DataTrigger>
+            </Style.Triggers>
             <Setter Property="Canvas.Left" Value="{Binding Path=X}"/>
             <Setter Property="Canvas.Top" Value="{Binding Path=Y}"/>
         </Style>
     </ItemsControl.ItemContainerStyle>
-
-
-    <ItemsControl.Resources>
-        <DataTemplate DataType="{x:Type model:StationModel}">
-            <Grid Width="100" Height="100" Tag="{Binding}">
-                <Polygon Points="6,94 94,94 85,10 80,10 75,85 70,85 70,50 6,50" Fill="Black" Stroke="Black" />
-                <Polygon Points="41,60 45,60 40,70 45,70 34,83 38,74 35,74" Fill="Yellow" Stroke="White" />
-                <TextBlock Text="{Binding Name}" Margin="5" />
-                <Rectangle Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
-            </Grid>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type model:ConsumerModel}">
-            <Grid Width="100" Height="50" Tag="{Binding}">
-                <Border BorderThickness="2" BorderBrush="Black" Background="LightSalmon" CornerRadius="10">
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Name}" VerticalAlignment="Center" />
-                </Border>
-                <Rectangle RadiusX="10" RadiusY="10" Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
-            </Grid>
-        </DataTemplate>
-    </ItemsControl.Resources>
 
 </ItemsControl>

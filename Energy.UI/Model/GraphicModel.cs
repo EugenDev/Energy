@@ -1,17 +1,26 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using Energy.UI.Controls;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Data;
 
 namespace Energy.UI.Model
 {
     public class GraphicModel
     {
-        public ObservableCollection<ModelBase> Elements { get; }
+        public CompositeCollection Elements { get; }
+        public ObservableCollection<ModelBase> Models { get; }
+        public ObservableCollection<LinkModel> Links { get; }
 
         public GraphicModel()
         {
-            Elements = new ObservableCollection<ModelBase>();
+            Models = new ObservableCollection<ModelBase>();
+            Links = new ObservableCollection<LinkModel>();
+
+            Elements = new CompositeCollection
+            {
+                new CollectionContainer {Collection = Links},
+                new CollectionContainer {Collection = Models}
+            };
         }
+
 
         //private void OnControlAdded(ControlBase control, ParticipantType ParticipantType)
         //{

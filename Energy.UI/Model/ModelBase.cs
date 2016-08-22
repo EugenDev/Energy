@@ -29,11 +29,11 @@ namespace Energy.UI.Model
         
         public string Name { get; set; }
 
-        public ModelBase()
+        protected ModelBase()
         {
         }
 
-        public ModelBase(string name)
+        protected ModelBase(string name)
         {
             Name = name;
         }

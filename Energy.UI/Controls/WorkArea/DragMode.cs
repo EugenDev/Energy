@@ -32,6 +32,7 @@ namespace Energy.UI.Controls.WorkArea
         public override void MouseLeftButtonUp()
         {
             GraphControl.MouseMove -= MouseMoveHandler;
+            GraphControl.ClearSelection();
             GraphControl.SetStartMode();
         }
     }
