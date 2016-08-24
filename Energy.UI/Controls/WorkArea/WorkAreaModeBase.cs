@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Energy.UI.Helpers;
 using Energy.UI.Model;
 
 namespace Energy.UI.Controls.WorkArea
@@ -32,18 +33,7 @@ namespace Energy.UI.Controls.WorkArea
 
         private ModelBase GetHittedItem(DependencyObject currentElement)
         {
-            while (true)
-            {
-                var parent = VisualTreeHelper.GetParent(currentElement);
-
-                if (parent == null)
-                    return null;
-
-                if (parent is ContentPresenter)
-                    return (parent as ContentPresenter).DataContext as ModelBase;
-
-                currentElement = parent;
-            }
+            return ModelBindingHelper.GetBoundItem(currentElement);
         }
 
         protected virtual void ProcessHitTest(ModelBase element) { }

@@ -29,10 +29,21 @@ namespace Energy.UI
             InitializeComponent();
             TaskModel = new TaskModel();
             GraphControl.LinkAdded += GraphControl_LinkAdded;
+            GraphControl.ElementDeleted += GraphControl_ElementDeleted;
+        }
+
+        private void GraphControl_ElementDeleted(object sender, ObjectEventArgs<ModelBase> e)
+        {
+            if(e.Item is StationModel)
+                TaskModel.DeleteStation(e.Item as StationModel);
+            else if (e.Item is ConsumerModel)
+                TaskModel.DeleteConsumer(e.Item as ConsumerModel);
+
         }
 
         private void GraphControl_LinkAdded(object sender, LinkAddedEventArgs e)
         {
+            //TODO: Dirty hack
             TaskModel.AddLink(e.From, e.To);
         }
 
@@ -191,5 +202,6 @@ namespace Energy.UI
 }
 
 //TODO: Калькулятор растояний - даём ему граф, он считает все расстояния и мы потом только спрашиваем
-//TODO:Экспортировать и импортировать график и таблицы
-//TODO:Убрать инфу о ссылках из контролов. Сделать слежение на уровне WorkArea
+//TODO: Экспортировать и импортировать график и таблицы
+//TODO: Убрать инфу о ссылках из контролов. Сделать слежение на уровне WorkArea
+//TODO: Корректно удалять линки

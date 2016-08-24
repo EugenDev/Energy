@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -60,6 +61,7 @@
       <DependentUpon>GraphControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ISelectable.cs" />
+    <Compile Include="Controls\LinkAddedEventArgs.cs" />
     <Compile Include="Controls\ObjectEventArgs.cs" />
     <Compile Include="Controls\WorkArea\AddLinkMode.cs" />
     <Compile Include="Controls\WorkArea\DragMode.cs" />
@@ -67,6 +69,7 @@
     <Compile Include="Controls\WorkArea\WorkAreaModeBase.cs" />
     <Compile Include="Controls\ParticipantType.cs" />
     <Compile Include="Converters\LinkToCenterCoodrinatesConverter.cs" />
+    <Compile Include="Helpers\ModelBindingHelper.cs" />
     <Compile Include="IControl.cs" />
     <Compile Include="Model\ConsumerModel.cs" />
     <Compile Include="Model\ControlAddedEventArgs.cs" />

@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using Energy.UI.Controls.WorkArea;
+using Energy.UI.Helpers;
 using Energy.UI.Model;
 
 namespace Energy.UI.Controls
@@ -106,20 +110,19 @@ namespace Energy.UI.Controls
             SetMode(new AddLinkMode(this));
         }
 
+        public event EventHandler<ObjectEventArgs<ModelBase>> ElementDeleted;
+
+        internal void OnElementDeleted(ModelBase element)
+        {
+            ElementDeleted?.Invoke(this, new ObjectEventArgs<ModelBase>(element));
+        }
+
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-        }
-    }
-
-    public class LinkAddedEventArgs : EventArgs
-    {
-        public ModelBase From { get; private set; }
-        public ModelBase To { get; private set; }
-
-        public LinkAddedEventArgs(ModelBase from, ModelBase to)
-        {
-            From = from;
-            To = to;
+            var model = ModelBindingHelper.GetBoundItem(sender as DependencyObject);
+            if(model == null)
+                return;
+            OnElementDeleted(model);
         }
     }
 }
