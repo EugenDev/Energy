@@ -1,10 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Energy.UI.Annotations;
 
 namespace Energy.UI.Model
 {
-    public class ModelBase :INotifyPropertyChanged
+    public class ModelBase : FeaturedItem, INotifyPropertyChanged
     {
         private double _x;
         public double X
@@ -27,15 +28,9 @@ namespace Energy.UI.Model
             set { _isSelected = value; OnPropertyChanged(); }
         }
         
-        public string Name { get; set; }
-
-        protected ModelBase()
+        protected ModelBase(string name, ObservableCollection<string>featuresNames)
+            :base(name, featuresNames)
         {
-        }
-
-        protected ModelBase(string name)
-        {
-            Name = name;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using System.Text;
 using Energy.UI.Annotations;
 
 namespace Energy.UI.Model

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using Energy.UI.Controls;
 using Energy.UI.Model;
 using Energy.UI.Serialization;
@@ -28,17 +26,19 @@ namespace Energy.UI
         {
             InitializeComponent();
             TaskModel = new TaskModel();
+            //TODO: Refresh columns automatically
+            //TaskModel.FeaturesModel.FeaturesNames.CollectionChanged += (sender, args) => RefreshColumns();
             GraphControl.LinkAdded += GraphControl_LinkAdded;
-            GraphControl.ElementDeleted += GraphControl_ElementDeleted;
+            //GraphControl.ElementDeleted += GraphControl_ElementDeleted;
+            Loaded += (sender, args) => RefreshColumns();
         }
 
         private void GraphControl_ElementDeleted(object sender, ObjectEventArgs<ModelBase> e)
         {
-            if(e.Item is StationModel)
-                TaskModel.DeleteStation(e.Item as StationModel);
-            else if (e.Item is ConsumerModel)
-                TaskModel.DeleteConsumer(e.Item as ConsumerModel);
-
+            //if(e.Item is StationModel)
+            //    TaskModel.DeleteStation(e.Item as StationModel);
+            //else if (e.Item is ConsumerModel)
+            //    TaskModel.DeleteConsumer(e.Item as ConsumerModel);
         }
 
         private void GraphControl_LinkAdded(object sender, LinkAddedEventArgs e)
@@ -69,24 +69,20 @@ namespace Energy.UI
             //TaskModel.FeaturesModel.RemoveFeature(featureName);
             //RefreshColumns();
         }
-
-        private DataGridTextColumn CreateFeatureColumn(string featureName)
-        {
-            return new DataGridTextColumn
-            {
-                Header = featureName,
-                Binding = new Binding { Path = new PropertyPath(featureName) }
-            };
-        }
-
+        
         private void RefreshColumns()
         {
-            StationsDataGrid.Columns.Clear();
-            ConsumersDataGrid.Columns.Clear();
-            foreach (var featureName in TaskModel.FeaturesModel.FeaturesNames)
+            RefreshColumns(StationsDataGrid);
+            RefreshColumns(ConsumersDataGrid);
+        }
+
+        private void RefreshColumns(DataGrid dataGrid)
+        {
+            dataGrid.Columns.Clear();
+            var columns = TaskModel.GetColumns();
+            foreach (var column in columns)
             {
-                StationsDataGrid.Columns.Add(CreateFeatureColumn(featureName));
-                ConsumersDataGrid.Columns.Add(CreateFeatureColumn(featureName));
+                dataGrid.Columns.Add(column);
             }
         }
         
@@ -105,7 +101,7 @@ namespace Energy.UI
 
         private void NewTaskMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            if (TaskModel.FeaturesModel.FeaturesNames.Count != 0)
+            if (TaskModel.FeaturesNames.Count != 0)
             {
                 var mbResult = MessageBox.Show("Создать новую модель, удалив старую?", "Подтверждение",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -162,15 +158,6 @@ namespace Energy.UI
         
         private void TestMenuItem1_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            //var collection = new List<ModelBase>
-            //{
-            //    new StationModel("Станция 1") {IsSelected = true},
-            //    new StationModel("Станция 2") {IsSelected = false, X = 200},
-            //    new ConsumerModel("Клиент 1") {IsSelected = true, Y = 200},
-            //    new ConsumerModel("Клиент 1") {IsSelected = false, X = 200, Y = 200}
-            //};
-
-            //GraphControl.ItemsSource = collection;
         }
 
         private static int _stationsCounter;
@@ -192,7 +179,7 @@ namespace Energy.UI
         {
             var name = "Feature_" + _featuresCounter++;
             TaskModel.AddFeature(name);
-            //TODO: Перестраивать колонки
+            RefreshColumns();
         }
 
         private void TestMenuItem2_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -205,3 +192,4 @@ namespace Energy.UI
 //TODO: Экспортировать и импортировать график и таблицы
 //TODO: Убрать инфу о ссылках из контролов. Сделать слежение на уровне WorkArea
 //TODO: Корректно удалять линки
+//TODO: Попробовать сделать GraphControl составным, чтобы можно было биндиться к некомпозитной коллекции

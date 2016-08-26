@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Energy.UI.Model;
 
 namespace Energy.UI.Serialization
@@ -10,43 +9,58 @@ namespace Energy.UI.Serialization
         {
             var result = new TaskModel();
             var lineNumber = 0;
-            var commonFeaturesNames = lines[lineNumber++].Split(',');
-            var stationsNames = lines[lineNumber++].Split(',');
-            var consumersNames = lines[lineNumber++].Split(',');
 
-            foreach (var stationName in stationsNames)
-                result.FeaturesModel.AddStation(stationName);
+            var featuresNames = lines[lineNumber++].Split(',');
+            foreach (var featureName in featuresNames)
+                result.FeaturesNames.Add(featureName);
 
-            foreach (var consumerName in consumersNames)
-                result.FeaturesModel.AddConsumer(consumerName);
+            var map = new Dictionary<string, ModelBase>();
 
-            foreach (var featureName in commonFeaturesNames)
-                result.FeaturesModel.AddFeature(featureName);
-
-            var stationsCount = stationsNames.Length;
+            var stationsCount = int.Parse(lines[lineNumber++]);
             for (var i = 0; i < stationsCount; i++)
             {
-                var columnIndex = 0;
-                var stationData = lines[lineNumber++].Split(',').Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray();
-                var station = result.FeaturesModel.Stations[i];
-                foreach (var featureName in result.FeaturesModel.FeaturesNames)
-                    station[featureName] = stationData[columnIndex++];
-                foreach (var featureName in result.FeaturesModel.FeaturesNames)
-                    station[featureName] = stationData[columnIndex++];
+                var stationParts = lines[lineNumber++].Split(',');
+                var station = new StationModel(stationParts[0], result.FeaturesNames)
+                {
+                    X = double.Parse(stationParts[1]),
+                    Y = double.Parse(stationParts[2])
+                };
+                for (var fn = 0; fn < stationParts.Length - 3; fn++)
+                {
+                    station[featuresNames[fn]] = double.Parse(stationParts[fn + 3]);
+                }
+                result.Stations.Add(station);
+                map.Add(station.Name, station);
             }
 
-            var consumersCount = consumersNames.Length;
+            var consumersCount = int.Parse(lines[lineNumber++]);
             for (var i = 0; i < consumersCount; i++)
             {
-                var columnIndex = 0;
-                var consumerData = lines[lineNumber++].Split(',').Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray();
-                var consumer = result.FeaturesModel.Consumers[i];
-                foreach (var featureName in result.FeaturesModel.FeaturesNames)
-                    consumer[featureName] = consumerData[columnIndex++];
-                foreach (var featureName in result.FeaturesModel.FeaturesNames)
-                    consumer[featureName] = consumerData[columnIndex++];
+                var consumerParts = lines[lineNumber++].Split(',');
+                var consumer = new ConsumerModel(consumerParts[0], result.FeaturesNames)
+                {
+                    X = double.Parse(consumerParts[1]),
+                    Y = double.Parse(consumerParts[2])
+                };
+                for (var fn = 0; fn < consumerParts.Length - 3; fn++)
+                {
+                    consumer[featuresNames[fn]] = double.Parse(consumerParts[fn + 3]);
+                }
+                result.Consumers.Add(consumer);
+                map.Add(consumer.Name, consumer);
             }
 
+            var linksConut = int.Parse(lines[lineNumber++]);
+            for (int linkNumber = 0; linkNumber < linksConut; linkNumber++)
+            {
+                var linkParts = lines[lineNumber++].Split(',');
+                var from = map[linkParts[0]];
+                var to = map[linkParts[1]];
+                var dist = double.Parse(linkParts[2]);
+                var cond = double.Parse(linkParts[3]);
+                result.Links.Add(new LinkModel(from, to, dist, cond));
+            }
+            
             return result;
         }
     }

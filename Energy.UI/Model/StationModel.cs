@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace Energy.UI.Model
 {
     public class StationModel : ModelBase
     {
-        public StationModel(string name) 
-            : base(name)
+        public StationModel(string name, ObservableCollection<string> featuresNames) 
+            : base(name, featuresNames)
         {
         }
     }

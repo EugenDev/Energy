@@ -56,11 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\ControlsFactory.cs" />
     <Compile Include="Controls\GraphControl.xaml.cs">
       <DependentUpon>GraphControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ISelectable.cs" />
     <Compile Include="Controls\LinkAddedEventArgs.cs" />
     <Compile Include="Controls\ObjectEventArgs.cs" />
     <Compile Include="Controls\WorkArea\AddLinkMode.cs" />
@@ -68,18 +66,13 @@
     <Compile Include="Controls\WorkArea\StartMode.cs" />
     <Compile Include="Controls\WorkArea\WorkAreaModeBase.cs" />
     <Compile Include="Controls\ParticipantType.cs" />
-    <Compile Include="Converters\LinkToCenterCoodrinatesConverter.cs" />
     <Compile Include="Helpers\ModelBindingHelper.cs" />
     <Compile Include="IControl.cs" />
     <Compile Include="Model\ConsumerModel.cs" />
-    <Compile Include="Model\ControlAddedEventArgs.cs" />
-    <Compile Include="Model\ControlRemovedEventArgs.cs" />
     <Compile Include="Converters\CoordinatesConverter.cs" />
     <Compile Include="Converters\DataTypeConverter.cs" />
     <Compile Include="Model\FeaturedItem.cs" />
     <Compile Include="Model\FeaturedItemPropertyDescriptor.cs" />
-    <Compile Include="Model\FeaturesModel.cs" />
-    <Compile Include="Model\GraphicModel.cs" />
     <Compile Include="Model\LinkModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\StationModel.cs" />
@@ -130,6 +123,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Model.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

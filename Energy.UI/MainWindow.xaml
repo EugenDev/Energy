@@ -63,15 +63,15 @@
 
         <TabControl Grid.Row="1">
             <TabItem Header="Визуализация">
-                <controls:GraphControl x:Name="GraphControl" ItemsSource="{Binding GraphicModel.Elements, Mode=OneWay}" />
+                <controls:GraphControl x:Name="GraphControl" ItemsSource="{Binding Controls, Mode=OneWay}" />
             </TabItem>
             
             <TabItem Header="Станции">
-                <DataGrid x:Name="StationsDataGrid" ItemsSource="{Binding FeaturesModel.Stations}" />
+                <DataGrid x:Name="StationsDataGrid" ItemsSource="{Binding Stations}" />
             </TabItem>
 
             <TabItem Header="Потребители">
-                <DataGrid x:Name="ConsumersDataGrid" ItemsSource="{Binding FeaturesModel.Consumers}" />
+                <DataGrid x:Name="ConsumersDataGrid" ItemsSource="{Binding Consumers}" />
             </TabItem>
             
             <TabItem Header="Результат">
@@ -82,13 +82,13 @@
         
         <StatusBar Grid.Row="2">
             <StatusBarItem>
-                <TextBlock Text="{Binding FeaturesModel.Stations.Count, StringFormat='Станций: \{0\}'}" />
+                <TextBlock Text="{Binding Stations.Count, StringFormat='Станций: \{0\}'}" />
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="{Binding FeaturesModel.Consumers.Count, StringFormat='Потребителей: \{0\}'}" />
+                <TextBlock Text="{Binding Consumers.Count, StringFormat='Потребителей: \{0\}'}" />
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="{Binding FeaturesModel.FeaturesNames.Count, StringFormat='Фич: \{0\}'}" />
+                <TextBlock Text="{Binding FeaturesNames.Count, StringFormat='Фич: \{0\}'}" />
             </StatusBarItem>
         </StatusBar>
     </Grid>

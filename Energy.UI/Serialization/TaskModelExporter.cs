@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Linq;
 using Energy.UI.Model;
 
@@ -8,65 +9,74 @@ namespace Energy.UI.Serialization
     {
         public static string ToText(TaskModel taskModel)
         {
-            var builder = new StringBuilder();
+            var builder = new StringBuilder(); //TODO: Не экспортировать проводимость и расстояние
+            builder.AppendLine(string.Join(",", taskModel.FeaturesNames));
 
-            builder.AppendLine(string.Join(",", taskModel.FeaturesModel.FeaturesNames));
-            builder.AppendLine(string.Join(",", taskModel.FeaturesModel.Stations.Select(s => s.Name)));
-            builder.AppendLine(string.Join(",", taskModel.FeaturesModel.Consumers.Select(c => c.Name)));
-            foreach (var station in taskModel.FeaturesModel.Stations)
+            builder.AppendLine(taskModel.Stations.Count.ToString());
+            foreach (var station in taskModel.Stations)
             {
-                builder.AppendLine(station.Serialize());
+                var featuresValues = string.Join(",", station.Select(f => station[f.Key]));
+                builder.AppendLine($"{station.Name},{station.X},{station.Y},{featuresValues}");
             }
-            foreach (var consumer in taskModel.FeaturesModel.Consumers)
+            builder.AppendLine(taskModel.Consumers.Count.ToString());
+            foreach (var consumer in taskModel.Consumers)
             {
-                builder.AppendLine(consumer.Serialize());
+                var featuresValues = string.Join(",", consumer.Select(f => consumer[f.Key]));
+                builder.AppendLine($"{consumer.Name},{consumer.X},{consumer.Y},{featuresValues}");
+            }
+            builder.AppendLine(taskModel.Links.Count.ToString());
+            foreach (var link in taskModel.Links)
+            {
+                builder.AppendLine($"{link.From.Name},{link.To.Name},{link.Distance},{link.Conduction}");
             }
 
             return builder.ToString();
         }
-
+        
         //Матрица потребителей
         public static double[,] GetRMatrix(TaskModel taskModel)
         {
-            var rowsCount = taskModel.FeaturesModel.Consumers.Count;
-            var columnsNames = taskModel.FeaturesModel.FeaturesNames;
-            var columnsCount = columnsNames.Count;
-            var result = new double[rowsCount, columnsCount];
+            //var rowsCount = taskModel.FeaturesModel.Consumers.Count;
+            //var columnsNames = taskModel.FeaturesModel.FeaturesNames;
+            //var columnsCount = columnsNames.Count;
+            //var result = new double[rowsCount, columnsCount];
 
-            var row = 0;
-            foreach (var consumer in taskModel.FeaturesModel.Consumers)
-            {
-                var column = 0;
-                foreach (var columnsName in columnsNames)
-                {
-                    result[row, column++] = consumer[columnsName];
-                }
-                row++;
-            }
+            //var row = 0;
+            //foreach (var consumer in taskModel.FeaturesModel.Consumers)
+            //{
+            //    var column = 0;
+            //    foreach (var columnsName in columnsNames)
+            //    {
+            //        result[row, column++] = consumer[columnsName];
+            //    }
+            //    row++;
+            //}
 
-            return result;
+            //return result;
+            return null;
         }
 
         //Матрица станций
         public static double[,] GetSMatrix(TaskModel taskModel)
         {
-            var columnsCount = taskModel.FeaturesModel.Stations.Count;
-            var columnsNames = taskModel.FeaturesModel.FeaturesNames;
-            var rowsCount = columnsNames.Count;
-            var result = new double[rowsCount, columnsCount];
+            //var columnsCount = taskModel.FeaturesModel.Stations.Count;
+            //var columnsNames = taskModel.FeaturesModel.FeaturesNames;
+            //var rowsCount = columnsNames.Count;
+            //var result = new double[rowsCount, columnsCount];
 
-            var row = 0;
-            foreach (var station in taskModel.FeaturesModel.Stations)
-            {
-                var column = 0;
-                foreach (var columnsName in columnsNames)
-                {
-                    result[row, column++] = station[columnsName];
-                }
-                row++;
-            }
+            //var row = 0;
+            //foreach (var station in taskModel.FeaturesModel.Stations)
+            //{
+            //    var column = 0;
+            //    foreach (var columnsName in columnsNames)
+            //    {
+            //        result[row, column++] = station[columnsName];
+            //    }
+            //    row++;
+            //}
 
-            return result;
+            //return result;
+            return null;
         }
     }
 }

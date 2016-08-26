@@ -1,4 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using Energy.UI.Controls;
 
@@ -6,47 +11,126 @@ namespace Energy.UI.Model
 {
     public class TaskModel
     {
-        public FeaturesModel FeaturesModel { get; }
-        public GraphicModel GraphicModel { get; }
+        public ObservableCollection<string> FeaturesNames { get; }
 
+        public ObservableCollection<StationModel> Stations { get; }
+        public ObservableCollection<ConsumerModel> Consumers { get; }
+        public ObservableCollection<LinkModel> Links { get; }
+
+        public CompositeCollection Controls { get; }
+        
         public TaskModel()
         {
-            FeaturesModel = new FeaturesModel();
-            GraphicModel = new GraphicModel();
+            FeaturesNames = new ObservableCollection<string>();
+
+            Stations = new ObservableCollection<StationModel>();
+            Consumers = new ObservableCollection<ConsumerModel>();
+            Links = new ObservableCollection<LinkModel>();
+
+            Controls = new CompositeCollection
+            {
+                new CollectionContainer {Collection = Links},
+                new CollectionContainer {Collection = Stations},
+                new CollectionContainer {Collection = Consumers}
+            };
         }
 
         public void AddParticipant(string name, ParticipantType participantType)
         {
-            //TODO: Check uniqueness
+            switch (participantType)
+            {
+                case ParticipantType.Consumer:
+                    Consumers.Add(new ConsumerModel(name, FeaturesNames));
+                    break;
 
-            if (participantType == ParticipantType.Station)
-                GraphicModel.Models.Add(new StationModel(name));
-            else
-                GraphicModel.Models.Add(new ConsumerModel(name));
+                case ParticipantType.Station:
+                    Stations.Add(new StationModel(name, FeaturesNames));
+                    break;
 
-            FeaturesModel.AddParticipant(name, participantType);
+                default:
+                    throw new InvalidOperationException("Unhandled enum value");
+            }
         }
 
         public void AddFeature(string featureName)
         {
-            FeaturesModel.AddFeature(featureName);
+            FeaturesNames.Add(featureName);
+            AddFeatureToCollection(Stations, featureName);
+            AddFeatureToCollection(Consumers, featureName);
+        }
+        
+        private static void AddFeatureToCollection(IEnumerable<ModelBase> featuredItems, string featureName)
+        {
+            foreach (var item in featuredItems)
+            {
+                item.Add(featureName, 0.0);
+            }
         }
 
         public void AddLink(ModelBase from, ModelBase to)
         {
-            GraphicModel.Links.Add(new LinkModel(from, to, 10, 10));
+            Links.Add(new LinkModel(from, to, 10, 10));
         }
 
-        public void DeleteStation(StationModel station)
+        //public void DeleteStation(StationModel station)
+        //{
+        //    FeaturesModel.RemoveStation(station.Name);
+        //    GraphicModel.Models.Remove(station);
+        //}
+
+        //public void DeleteConsumer(ConsumerModel consumer)
+        //{
+        //    FeaturesModel.RemoveConsumer(consumer.Name);
+        //    GraphicModel.Models.Remove(consumer);
+        //}
+
+        private DataGridTextColumn CreateFeatureColumn(string featureName)
         {
-            FeaturesModel.RemoveStation(station.Name);
-            GraphicModel.Models.Remove(station);
+            return new DataGridTextColumn
+            {
+                Header = featureName,
+                Binding = new Binding { Path = new PropertyPath(featureName) },
+                IsReadOnly = featureName.Equals("Расстояние") || featureName.Equals("Проводимость")
+            };
         }
 
-        public void DeleteConsumer(ConsumerModel consumer)
+        public DataGridTextColumn[] GetColumns()
         {
-            FeaturesModel.RemoveConsumer(consumer.Name);
-            GraphicModel.Models.Remove(consumer);
+            return FeaturesNames
+                .Select(CreateFeatureColumn)
+                .ToArray();
         }
+
+        public void CalculateFixedFeatures()
+        {
+            
+        }
+
+        //public void RemoveStation(string name)
+        //{
+        //    var removedStation = Stations.First(x => x.Name.Equals(name));
+        //    Stations.Remove(removedStation);
+        //}
+
+        //public void RemoveConsumer(string name)
+        //{
+        //    var removedConsumer = Consumers.First(x => x.Name.Equals(name));
+        //    Consumers.Remove(removedConsumer);
+        //}
+
+        //public void RemoveFeature(string featureName)
+        //{
+        //    RemoveFeatureFromCollection(Stations, featureName);
+        //    RemoveFeatureFromCollection(Consumers, featureName);
+        //    FeaturesNames.Remove(featureName);
+        //}
+
+        //private static void RemoveFeatureFromCollection(IEnumerable<FeaturedItem> featuredItem, string featureName)
+        //{
+        //    foreach (var item in featuredItem)
+        //    {
+        //        item.Remove(featureName);
+        //    }
+        //}
     }
 }
