@@ -111,18 +111,29 @@ namespace Energy.UI.Controls
         }
 
         public event EventHandler<ObjectEventArgs<ModelBase>> ElementDeleted;
-
         internal void OnElementDeleted(ModelBase element)
         {
             ElementDeleted?.Invoke(this, new ObjectEventArgs<ModelBase>(element));
         }
 
+        public event EventHandler<ObjectEventArgs<LinkModel>> LinkDeleted;
+        internal void OnLinkDeleted(LinkModel element)
+        {
+            LinkDeleted?.Invoke(this, new ObjectEventArgs<LinkModel>(element));
+        }
+
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var model = ModelBindingHelper.GetBoundItem(sender as DependencyObject);
-            if(model == null)
-                return;
-            OnElementDeleted(model);
+            var model = ModelBindingHelper.TryGetBoundItem(sender as DependencyObject);
+            if (model == null)
+            {
+                var linkModel = ModelBindingHelper.TryGetLinkItem(sender as DependencyObject);
+                if (linkModel == null)
+                    return;
+                OnLinkDeleted(linkModel);
+            }
+            else
+                OnElementDeleted(model);
         }
     }
 }

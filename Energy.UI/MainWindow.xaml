@@ -75,8 +75,7 @@
             </TabItem>
             
             <TabItem Header="Результат">
-                <!--<Label Content="Тут пока ничего нет ..." VerticalAlignment="Center" HorizontalAlignment="Center"></Label>-->
-                <controls:TestCanvas></controls:TestCanvas>
+                <Label Content="Тут пока ничего нет ..." VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
             </TabItem>
 
         </TabControl>

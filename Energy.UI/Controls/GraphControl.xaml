@@ -16,7 +16,6 @@
         
         <converters:CoordinatesConverter x:Key="CoordinatesConverter" />
         <converters:DataTypeConverter x:Key="DataTypeConverter" />
-        <converters:IntToRedStrokeConverter x:Key="IntToRedStrokeConverter" />
 
         <DataTemplate DataType="{x:Type model:StationModel}">
             <Grid Width="100" Height="100" ContextMenu="{StaticResource DeleteElementMenuItem}" >

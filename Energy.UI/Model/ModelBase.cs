@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Energy.UI.Annotations;
+using Energy.UI.Controls;
 
 namespace Energy.UI.Model
 {
@@ -27,7 +28,9 @@ namespace Energy.UI.Model
             get { return _isSelected; }
             set { _isSelected = value; OnPropertyChanged(); }
         }
-        
+
+        public ParticipantType ParticipantType { get; set; }
+
         protected ModelBase(string name, ObservableCollection<string>featuresNames)
             :base(name, featuresNames)
         {

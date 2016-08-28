@@ -71,7 +71,6 @@
     <Compile Include="Controls\WorkArea\StartMode.cs" />
     <Compile Include="Controls\WorkArea\WorkAreaModeBase.cs" />
     <Compile Include="Controls\ParticipantType.cs" />
-    <Compile Include="Converters\IntToRedStrokeConverter.cs" />
     <Compile Include="Helpers\ModelBindingHelper.cs" />
     <Compile Include="IControl.cs" />
     <Compile Include="Model\ConsumerModel.cs" />

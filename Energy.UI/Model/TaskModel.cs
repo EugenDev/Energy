@@ -22,7 +22,7 @@ namespace Energy.UI.Model
         
         public TaskModel()
         {
-            FeaturesNames = new ObservableCollection<string>();
+            FeaturesNames = new ObservableCollection<string> {"Расстояние", "Проводимость"};
 
             Stations = new ObservableCollection<StationModel>();
             Consumers = new ObservableCollection<ConsumerModel>();
@@ -53,6 +53,28 @@ namespace Energy.UI.Model
             }
         }
 
+        public void DeleteParticipant(ModelBase item)
+        {
+            var partisipantType = item.ParticipantType;
+            switch (partisipantType)
+            {
+                case ParticipantType.Station:
+                    Stations.Remove(item as StationModel);
+                    break;
+
+                case ParticipantType.Consumer:
+                    Consumers.Remove(item as ConsumerModel);
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid ParticipantType");
+            }
+
+            var deletedLinks = Links.Where(l => l.From == item || l.To == item).ToList();
+            foreach (var deletedLink in deletedLinks)
+                Links.Remove(deletedLink);
+        }
+
         public void AddFeature(string featureName)
         {
             FeaturesNames.Add(featureName);
@@ -68,27 +90,50 @@ namespace Energy.UI.Model
             }
         }
 
+        public void RemoveFeature(string featureName)
+        {
+            RemoveFeatureFromCollection(Stations, featureName);
+            RemoveFeatureFromCollection(Consumers, featureName);
+            FeaturesNames.Remove(featureName);
+        }
+
+        private static void RemoveFeatureFromCollection(IEnumerable<FeaturedItem> featuredItem, string featureName)
+        {
+            foreach (var item in featuredItem)
+                item.Remove(featureName);
+        }
+
         public void AddLink(ModelBase from, ModelBase to)
         {
             var link = new LinkModel(from, to);
-            var editWindow = new EditLinkWindow(link, true);
-            editWindow.ShowDialog();
-            var dialogResult = editWindow.DialogResult;
-            if (dialogResult.HasValue && dialogResult.Value)
-                Links.Add(link);
+            if (App.IsDebug)
+            {
+                var r = new Random(DateTime.Now.Millisecond);
+                link.Distance = r.Next(5, 20);
+                link.Conduction = r.Next(1, 4);
+            }
+            else
+            {
+                var editWindow = new EditLinkWindow(link, true);
+                editWindow.ShowDialog();
+                var dialogResult = editWindow.DialogResult;
+                if (!dialogResult.HasValue || !dialogResult.Value)
+                    return;
+            }
+            Links.Add(link);
         }
 
-        //public void DeleteStation(StationModel station)
-        //{
-        //    FeaturesModel.RemoveStation(station.Name);
-        //    GraphicModel.Models.Remove(station);
-        //}
+        public void DeletLink(LinkModel linkModel)
+        {
+            Links.Remove(linkModel);
+        }
 
-        //public void DeleteConsumer(ConsumerModel consumer)
-        //{
-        //    FeaturesModel.RemoveConsumer(consumer.Name);
-        //    GraphicModel.Models.Remove(consumer);
-        //}
+        public DataGridTextColumn[] GetColumns()
+        {
+            return FeaturesNames
+                .Select(CreateFeatureColumn)
+                .ToArray();
+        }
 
         private DataGridTextColumn CreateFeatureColumn(string featureName)
         {
@@ -99,39 +144,5 @@ namespace Energy.UI.Model
                 IsReadOnly = featureName.Equals("Расстояние") || featureName.Equals("Проводимость")
             };
         }
-
-        public DataGridTextColumn[] GetColumns()
-        {
-            return FeaturesNames
-                .Select(CreateFeatureColumn)
-                .ToArray();
-        }
-
-        //public void RemoveStation(string name)
-        //{
-        //    var removedStation = Stations.First(x => x.Name.Equals(name));
-        //    Stations.Remove(removedStation);
-        //}
-
-        //public void RemoveConsumer(string name)
-        //{
-        //    var removedConsumer = Consumers.First(x => x.Name.Equals(name));
-        //    Consumers.Remove(removedConsumer);
-        //}
-
-        //public void RemoveFeature(string featureName)
-        //{
-        //    RemoveFeatureFromCollection(Stations, featureName);
-        //    RemoveFeatureFromCollection(Consumers, featureName);
-        //    FeaturesNames.Remove(featureName);
-        //}
-
-        //private static void RemoveFeatureFromCollection(IEnumerable<FeaturedItem> featuredItem, string featureName)
-        //{
-        //    foreach (var item in featuredItem)
-        //    {
-        //        item.Remove(featureName);
-        //    }
-        //}
     }
 }

@@ -33,7 +33,7 @@ namespace Energy.UI.Controls.WorkArea
 
         private ModelBase GetHittedItem(DependencyObject currentElement)
         {
-            return ModelBindingHelper.GetBoundItem(currentElement);
+            return ModelBindingHelper.TryGetBoundItem(currentElement);
         }
 
         protected virtual void ProcessHitTest(ModelBase element) { }

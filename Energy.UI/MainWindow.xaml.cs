@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Energy.Solving;
 using Energy.UI.Calculations;
 using Energy.UI.Controls;
@@ -27,24 +28,29 @@ namespace Energy.UI
         {
             InitializeComponent();
             TaskModel = new TaskModel();
-            //TODO: Refresh columns automatically
-            //TaskModel.FeaturesModel.FeaturesNames.CollectionChanged += (sender, args) => RefreshColumns();
             GraphControl.LinkAdded += GraphControl_LinkAdded;
-            //GraphControl.ElementDeleted += GraphControl_ElementDeleted;
+            GraphControl.ElementDeleted += GraphControl_ElementDeleted;
+            GraphControl.LinkDeleted += GraphControlOnLinkDeleted;
             Loaded += (sender, args) => RefreshColumns();
+            //TODO: Refresh columns automatically< through binding
+            TaskModel.FeaturesNames.CollectionChanged += (sender, args) => RefreshColumns();
+        }
+
+        private void GraphControlOnLinkDeleted(object sender, ObjectEventArgs<LinkModel> e)
+        {
+            //TODO: Dirty hack 3
+            TaskModel.DeletLink(e.Item);
         }
 
         private void GraphControl_ElementDeleted(object sender, ObjectEventArgs<ModelBase> e)
         {
-            //if(e.Item is StationModel)
-            //    TaskModel.DeleteStation(e.Item as StationModel);
-            //else if (e.Item is ConsumerModel)
-            //    TaskModel.DeleteConsumer(e.Item as ConsumerModel);
+            //TODO: Dirty hack 2
+            TaskModel.DeleteParticipant(e.Item);
         }
 
         private void GraphControl_LinkAdded(object sender, LinkAddedEventArgs e)
         {
-            //TODO: Dirty hack
+            //TODO: Dirty hack 1
             TaskModel.AddLink(e.From, e.To);
         }
 
@@ -65,10 +71,9 @@ namespace Energy.UI
 
         private void RemoveFeature_Click(object sender, RoutedEventArgs e)
         {
-            //var selectedColumn = ConsumersDataGrid.SelectedCells[0].Column;
-            //var featureName = ((selectedColumn as DataGridTextColumn).Binding as Binding).Path.Path;
-            //TaskModel.FeaturesModel.RemoveFeature(featureName);
-            //RefreshColumns();
+            var selectedColumn = ConsumersDataGrid.SelectedCells[0].Column;
+            var featureName = ((selectedColumn as DataGridTextColumn).Binding as Binding).Path.Path;
+            TaskModel.RemoveFeature(featureName);
         }
         
         private void RefreshColumns()
@@ -161,26 +166,57 @@ namespace Energy.UI
         {
             var calc = new Calculator();
             calc.ReCalculateDistances(TaskModel);
+            RefreshColumns();
         }
 
         private static int _stationsCounter;
         private void AddStation_OnClick(object sender, RoutedEventArgs e)
         {
-            var name = "Station_" + _stationsCounter++;
+            string name;
+            if (App.IsDebug)
+            {
+                name = "Station_" + _stationsCounter++;
+            }
+            else
+            {
+                name = RequestName();
+                if(name == null)
+                    return;
+            }
             TaskModel.AddParticipant(name, ParticipantType.Station);
         }
 
         private static int _consumersCounter;
         private void AddConsumer_OnClick(object sender, RoutedEventArgs e)
         {
-            var name = "Consumer_" + _consumersCounter++;
+            string name;
+            if (App.IsDebug)
+            {
+                name = "Consumer_" + _consumersCounter++;
+            }
+            else
+            {
+                name = RequestName();
+                if (name == null)
+                    return;
+            }
             TaskModel.AddParticipant(name, ParticipantType.Consumer);
         }
 
         private static int _featuresCounter;
         private void AddFeature_OnClick(object sender, RoutedEventArgs e)
         {
-            var name = "Feature_" + _featuresCounter++;
+            string name;
+            if (App.IsDebug)
+            {
+                name = "Feature_" + _featuresCounter++;
+            }
+            else
+            {
+                name = RequestName();
+                if (name == null)
+                    return;
+            }
             TaskModel.AddFeature(name);
             RefreshColumns();
         }
@@ -193,7 +229,7 @@ namespace Energy.UI
     }
 }
 
-//TODO: Калькулятор растояний - даём ему TaskModel, он считает все расстояния
-//TODO: Корректно удалять линки
 //TODO: Попробовать сделать GraphControl составным, чтобы можно было биндиться к некомпозитной коллекции
 //TODO: Надписи на линках другим цветом
+//TODO: Несвязный граф!!!!
+//TODO: Окна появляются непонятно где
