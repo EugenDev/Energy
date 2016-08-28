@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using Energy.Solving;
+using Energy.UI.Calculations;
 using Energy.UI.Controls;
 using Energy.UI.Model;
 using Energy.UI.Serialization;
@@ -158,6 +159,8 @@ namespace Energy.UI
         
         private void TestMenuItem1_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
+            var calc = new Calculator();
+            calc.ReCalculateDistances(TaskModel);
         }
 
         private static int _stationsCounter;
