@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:model="clr-namespace:Energy.UI.Model"
+             xmlns:controls="clr-namespace:Energy.UI.Controls"
              xmlns:converters="clr-namespace:Energy.UI.Converters"
              ClipToBounds="True"
-             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
+             mc:Ignorable="d" d:DesignHeight="100" d:DesignWidth="100">
 
     <ItemsControl.Resources>
         <ContextMenu x:Key="DeleteElementMenuItem">
@@ -15,7 +16,8 @@
         
         <converters:CoordinatesConverter x:Key="CoordinatesConverter" />
         <converters:DataTypeConverter x:Key="DataTypeConverter" />
-        
+        <converters:IntToRedStrokeConverter x:Key="IntToRedStrokeConverter" />
+
         <DataTemplate DataType="{x:Type model:StationModel}">
             <Grid Width="100" Height="100" ContextMenu="{StaticResource DeleteElementMenuItem}" >
                 <Polygon Points="6,94 94,94 85,10 80,10 75,85 70,85 70,50 6,50" Fill="Black" Stroke="Black" />
@@ -26,7 +28,7 @@
         </DataTemplate>
         
         <DataTemplate DataType="{x:Type model:ConsumerModel}">
-            <Grid Width="100" Height="50" ContextMenu="{StaticResource DeleteElementMenuItem}">
+            <Grid Margin="0,50,0,0" Width="100" Height="50" ContextMenu="{StaticResource DeleteElementMenuItem}">
                 <Border BorderThickness="2" BorderBrush="Black" Background="LightSalmon" CornerRadius="10">
                     <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Name}" VerticalAlignment="Center" />
                 </Border>
@@ -35,15 +37,13 @@
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type model:LinkModel}">
-            <Line X1="{Binding Path=From.X, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+            <controls:LinkControl X1="{Binding Path=From.X, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
                     Y1="{Binding Path=From.Y, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
                     X2="{Binding Path=To.X, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
                     Y2="{Binding Path=To.Y, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
-                    Stroke="DarkRed" StrokeThickness="2" ContextMenu="{StaticResource DeleteElementMenuItem}">
-                <Line.ToolTip>
-                    <ToolTip Content="{Binding Distance}" />
-                </Line.ToolTip>
-            </Line>
+                    Conduction="{Binding Conduction}" Distance="{Binding Distance}" Stroke="LightSkyBlue" 
+                    StrokeThickness="1" ContextMenu="{StaticResource DeleteElementMenuItem}">
+            </controls:LinkControl>
         </DataTemplate>
     </ItemsControl.Resources>
     

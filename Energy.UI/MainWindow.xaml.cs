@@ -184,12 +184,13 @@ namespace Energy.UI
 
         private void TestMenuItem2_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
+            var w = new EditLinkWindow(null, true);
+            w.ShowDialog();
         }
     }
 }
 
-//TODO: Калькулятор растояний - даём ему граф, он считает все расстояния и мы потом только спрашиваем
-//TODO: Экспортировать и импортировать график и таблицы
-//TODO: Убрать инфу о ссылках из контролов. Сделать слежение на уровне WorkArea
+//TODO: Калькулятор растояний - даём ему TaskModel, он считает все расстояния
 //TODO: Корректно удалять линки
 //TODO: Попробовать сделать GraphControl составным, чтобы можно было биндиться к некомпозитной коллекции
+//TODO: Надписи на линках другим цветом

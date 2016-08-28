@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Energy.UI.Controls;
+using Energy.UI.Windows;
 
 namespace Energy.UI.Model
 {
@@ -69,7 +70,12 @@ namespace Energy.UI.Model
 
         public void AddLink(ModelBase from, ModelBase to)
         {
-            Links.Add(new LinkModel(from, to, 10, 10));
+            var link = new LinkModel(from, to);
+            var editWindow = new EditLinkWindow(link, true);
+            editWindow.ShowDialog();
+            var dialogResult = editWindow.DialogResult;
+            if (dialogResult.HasValue && dialogResult.Value)
+                Links.Add(link);
         }
 
         //public void DeleteStation(StationModel station)
@@ -99,11 +105,6 @@ namespace Energy.UI.Model
             return FeaturesNames
                 .Select(CreateFeatureColumn)
                 .ToArray();
-        }
-
-        public void CalculateFixedFeatures()
-        {
-            
         }
 
         //public void RemoveStation(string name)

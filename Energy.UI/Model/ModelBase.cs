@@ -20,7 +20,7 @@ namespace Energy.UI.Model
             get { return _y; }
             set { _y = value; OnPropertyChanged(); }
         }
-
+        
         private bool _isSelected;
         public bool IsSelected
         {

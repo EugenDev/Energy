@@ -10,7 +10,7 @@ namespace Energy.UI.Serialization
             var result = new TaskModel();
             var lineNumber = 0;
 
-            var featuresNames = lines[lineNumber++].Split(',');
+            var featuresNames = lines[lineNumber++].Split(';');
             foreach (var featureName in featuresNames)
                 result.FeaturesNames.Add(featureName);
 
@@ -19,7 +19,7 @@ namespace Energy.UI.Serialization
             var stationsCount = int.Parse(lines[lineNumber++]);
             for (var i = 0; i < stationsCount; i++)
             {
-                var stationParts = lines[lineNumber++].Split(',');
+                var stationParts = lines[lineNumber++].Split(';');
                 var station = new StationModel(stationParts[0], result.FeaturesNames)
                 {
                     X = double.Parse(stationParts[1]),
@@ -36,7 +36,7 @@ namespace Energy.UI.Serialization
             var consumersCount = int.Parse(lines[lineNumber++]);
             for (var i = 0; i < consumersCount; i++)
             {
-                var consumerParts = lines[lineNumber++].Split(',');
+                var consumerParts = lines[lineNumber++].Split(';');
                 var consumer = new ConsumerModel(consumerParts[0], result.FeaturesNames)
                 {
                     X = double.Parse(consumerParts[1]),
@@ -53,12 +53,17 @@ namespace Energy.UI.Serialization
             var linksConut = int.Parse(lines[lineNumber++]);
             for (int linkNumber = 0; linkNumber < linksConut; linkNumber++)
             {
-                var linkParts = lines[lineNumber++].Split(',');
+                var linkParts = lines[lineNumber++].Split(';');
                 var from = map[linkParts[0]];
                 var to = map[linkParts[1]];
                 var dist = double.Parse(linkParts[2]);
-                var cond = double.Parse(linkParts[3]);
-                result.Links.Add(new LinkModel(from, to, dist, cond));
+                var cond = int.Parse(linkParts[3]);
+                var link = new LinkModel(from, to)
+                {
+                    Conduction = cond,
+                    Distance = dist
+                };
+                result.Links.Add(link);
             }
             
             return result;

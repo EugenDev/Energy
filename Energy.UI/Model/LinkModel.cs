@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using System.Text;
 using Energy.UI.Annotations;
 
 namespace Energy.UI.Model
@@ -9,7 +7,7 @@ namespace Energy.UI.Model
     public class LinkModel : INotifyPropertyChanged
     {
         private double _distance;
-        private double _conduction;
+        private int _conduction;
 
         public double Distance
         {
@@ -17,7 +15,7 @@ namespace Energy.UI.Model
             set { _distance = value; OnPropertyChanged(); }
         }
 
-        public double Conduction
+        public int Conduction
         {
             get { return _conduction; }
             set { _conduction = value; OnPropertyChanged(); }
@@ -26,12 +24,10 @@ namespace Energy.UI.Model
         public ModelBase From { get; }
         public ModelBase To { get; }
 
-        public LinkModel(ModelBase from, ModelBase to, double distance, double conduction)
+        public LinkModel(ModelBase from, ModelBase to)
         {
             From = from;
             To = to;
-            _distance = distance;
-            _conduction = conduction;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
