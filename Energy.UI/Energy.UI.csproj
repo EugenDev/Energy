@@ -150,9 +150,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Start\Start.csproj">
-      <Project>{5ac2e598-5440-4a74-983c-bdaca31a4304}</Project>
-      <Name>Start</Name>
+    <ProjectReference Include="..\Energy.Solving\Energy.Solving.csproj">
+      <Project>{6A5E70F8-4B89-4880-833A-A4E66D3646FC}</Project>
+      <Name>Energy.Solving</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

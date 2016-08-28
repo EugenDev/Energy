@@ -2,12 +2,12 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Energy.Solving;
 using Energy.UI.Controls;
 using Energy.UI.Model;
 using Energy.UI.Serialization;
 using Energy.UI.Windows;
 using Microsoft.Win32;
-using Start;
 
 namespace Energy.UI
 {
@@ -148,7 +148,7 @@ namespace Energy.UI
                 var rMatrix = TaskModelExporter.GetRMatrix(TaskModel);
                 var sMatrix = TaskModelExporter.GetSMatrix(TaskModel);
 
-                var result = Solver.Solve(rMatrix, sMatrix);
+                var result = MainSolver.Solve(rMatrix, sMatrix);
             }
             catch (Exception ex)
             {

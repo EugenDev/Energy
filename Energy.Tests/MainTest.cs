@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using Start;
+﻿using Energy.Solving;
+using NUnit.Framework;
 
 namespace Energy.Tests
 {
@@ -35,7 +35,7 @@ namespace Energy.Tests
 				{0.483, 0.516 ,0.483, 0.400}
 			};
 
-			Assert.That(Solver.GetT(inputR, inputS), Is.EqualTo(output).Within(Tolerance));
+			Assert.That(MainSolver.GetT(inputR, inputS), Is.EqualTo(output).Within(Tolerance));
 		}
 
         [Test]
@@ -81,7 +81,7 @@ namespace Energy.Tests
                 {0.600, 0.500, 0.500, 0.500}
             };
 
-            Assert.That(Solver.GetT(inputR, inputS), Is.EqualTo(output).Within(Tolerance));
+            Assert.That(MainSolver.GetT(inputR, inputS), Is.EqualTo(output).Within(Tolerance));
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace Energy.Tests
                 {0.500, 0.500, 0.500, 0.500, 0.500, 0.500}
             };
 
-            Assert.That(Solver.GetW(inputT), Is.EqualTo(expectedOutput).Within(Tolerance));
+            Assert.That(MainSolver.GetW(inputT), Is.EqualTo(expectedOutput).Within(Tolerance));
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace Energy.Tests
                 {0.500, 0.500, 0.500, 0.500, 0.500, 0.500}
             };
 
-            Assert.That(Solver.GetTreshold(input), Is.EqualTo(0.527).Within(Tolerance));
+            Assert.That(MainSolver.GetTreshold(input), Is.EqualTo(0.527).Within(Tolerance));
         }
 
 	    [Test]
@@ -171,7 +171,7 @@ namespace Energy.Tests
 	            new[] {0, 1, 3, 4, 5, 6, 7, 8, 9, 10}
 	        };
 
-            Assert.That(Solver.GetZones(inputT, 0.527), Is.EqualTo(expectedResult));
+            Assert.That(MainSolver.GetZones(inputT, 0.527), Is.EqualTo(expectedResult));
         }
 
         [Test]
@@ -209,7 +209,7 @@ namespace Energy.Tests
                 new[] {0, 1, 3, 4, 5, 6, 7, 8, 9, 10}
             };
 
-            Assert.That(Solver.Solve(inputR, inputS), Is.EqualTo(expectedResult));
+            Assert.That(MainSolver.Solve(inputR, inputS), Is.EqualTo(expectedResult));
         }
     }
 }

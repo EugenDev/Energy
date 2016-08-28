@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using Energy.Solving;
 
 namespace Start
 {
@@ -25,7 +26,7 @@ namespace Start
 
                 var matrixS = ReadMatrix(lines, currentIndex);
 
-                var answer = Solver.Solve(matrixR, matrixS);
+                var answer = MainSolver.Solve(matrixR, matrixS);
                 WriteAnswer("output.txt", answer);
             }
             catch (Exception exception)

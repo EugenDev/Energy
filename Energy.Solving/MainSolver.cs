@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Start
+namespace Energy.Solving
 {
-	public class Solver
+	public class MainSolver
 	{
 	    public static int[][] Solve(double[,] matrixR, double[,] matrixS)
 	    {
