@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" Height="140" Width="220" ResizeMode="NoResize" 
+        mc:Ignorable="d" Height="140" Width="300" ResizeMode="NoResize" 
         WindowStartupLocation="CenterOwner" >
     
     <Grid>
@@ -18,10 +18,10 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Расстояние" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Расстояние" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,0,0,0" />
         <TextBox Grid.Row="0" Grid.Column="1" Name="DistanceTextBox" VerticalAlignment="Center" Margin="0,0,5,0" Height="25" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" />
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Проводимость" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" />
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Проводимость" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,0,0,0" />
         <ComboBox Grid.Row="1" Grid.Column="1" Name="ConductionComboBox" Margin="0,5,5,5" HorizontalContentAlignment="Right" Height="25">
             <ComboBoxItem Content="1" />
             <ComboBoxItem Content="2" />

@@ -209,7 +209,7 @@ namespace Energy.Tests
                 new[] {0, 1, 3, 4, 5, 6, 7, 8, 9, 10}
             };
 
-            Assert.That(MainSolver.Solve(inputR, inputS), Is.EqualTo(expectedResult));
+            Assert.That(MainSolver.SolveSimple(inputR, inputS), Is.EqualTo(expectedResult));
         }
     }
 }

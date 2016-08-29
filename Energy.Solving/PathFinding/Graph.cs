@@ -102,7 +102,7 @@ namespace Energy.Solving.PathFinding
             foreach (var pair in _nodes)
             {
                 pair.Value.Distance = double.MaxValue;
-                pair.Value.Conduction = 0; //TODO: Сделать Enum?
+                pair.Value.Conduction = 0;
             }
         }
     }

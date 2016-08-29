@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -28,45 +30,63 @@ namespace Energy.UI
         {
             InitializeComponent();
             TaskModel = new TaskModel();
-            GraphControl.LinkAdded += GraphControl_LinkAdded;
-            GraphControl.ElementDeleted += GraphControl_ElementDeleted;
-            GraphControl.LinkDeleted += GraphControlOnLinkDeleted;
             Loaded += (sender, args) => RefreshColumns();
-            //TODO: Refresh columns automatically< through binding
             TaskModel.FeaturesNames.CollectionChanged += (sender, args) => RefreshColumns();
+
+            GraphControl.WantAddLink += GraphControlWantAddLink;
+            GraphControl.WantDeleteElement += GraphControlWantDeleteElement;
+            GraphControl.WantDeleteLink += GraphControlOnWantDeleteLink;
+            GraphControl.WantEditLink += GraphControl_WantEditLink;
+            GraphControl.WantEditElement += GraphControl_WantEditElement;
         }
 
-        private void GraphControlOnLinkDeleted(object sender, ObjectEventArgs<LinkModel> e)
+        private void GraphControl_WantEditElement(object sender, ObjectEventArgs<ModelBase> e)
         {
-            //TODO: Dirty hack 3
+            var newName = NameRequestWindow.RequestName(this, e.Item.Name);
+            if (string.IsNullOrWhiteSpace(newName))
+                return;
+
+            e.Item.Name = newName;
+        }
+
+        private void GraphControl_WantEditLink(object sender, ObjectEventArgs<LinkModel> e)
+        {
+            var editLink = new LinkModel(e.Item.From, e.Item.To)
+            {
+                Conduction = e.Item.Conduction,
+                Distance = e.Item.Distance
+            };
+            if (!EditLinkWindow.ShowEditDialog(editLink, false, this))
+                return;
+            e.Item.Distance = editLink.Distance;
+            e.Item.Conduction = editLink.Conduction;
+        }
+
+        private void GraphControlOnWantDeleteLink(object sender, ObjectEventArgs<LinkModel> e)
+        {
             TaskModel.DeletLink(e.Item);
         }
 
-        private void GraphControl_ElementDeleted(object sender, ObjectEventArgs<ModelBase> e)
+        private void GraphControlWantDeleteElement(object sender, ObjectEventArgs<ModelBase> e)
         {
-            //TODO: Dirty hack 2
             TaskModel.DeleteParticipant(e.Item);
         }
 
-        private void GraphControl_LinkAdded(object sender, LinkAddedEventArgs e)
+        private void GraphControlWantAddLink(object sender, LinkAddedEventArgs e)
         {
-            //TODO: Dirty hack 1
-            TaskModel.AddLink(e.From, e.To);
-        }
-
-        private string RequestName()
-        {
-            var nameRequestWindow = new NameRequestWindow
+            var link = new LinkModel(e.From, e.To);
+            if (App.IsDebug)
             {
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
-            };
-            var dialogResult = nameRequestWindow.ShowDialog();
-            if (dialogResult.HasValue && dialogResult.Value)
-            {
-                return nameRequestWindow.EnteredName;
+                var r = new Random(DateTime.Now.Millisecond);
+                link.Distance = r.Next(5, 20);
+                link.Conduction = r.Next(1, 4);
             }
-            return null;
+            else
+            {
+                if (!EditLinkWindow.ShowEditDialog(link, true, this))
+                    return;
+            }
+            TaskModel.AddLink(link);
         }
 
         private void RemoveFeature_Click(object sender, RoutedEventArgs e)
@@ -141,12 +161,6 @@ namespace Energy.UI
             }
         }
 
-        private void GenerateDataMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            TaskModel = TaskModelGenerator.GenerateRandom();
-            RefreshColumns();
-        }
-
         private void SolveTaskMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             try
@@ -155,13 +169,92 @@ namespace Energy.UI
                 var sMatrix = TaskModelExporter.GetSMatrix(TaskModel);
 
                 var result = MainSolver.Solve(rMatrix, sMatrix);
+                var printedResult = SolveResultPrinter.PrintTaskSolveResult(
+                    TaskModel.Stations.Select(s => s.Name).ToList(), 
+                    TaskModel.Consumers.Select(c => c.Name).ToList(), 
+                    result);
+                ResultTextBox.Text = printedResult;
+                File.WriteAllText("result.txt", printedResult);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка при расчётах", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
+
+        private static int _stationsCounter;
+        private void AddStation_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string name;
+                if (App.IsDebug)
+                {
+                    name = "Station_" + _stationsCounter++;
+                }
+                else
+                {
+                    name = NameRequestWindow.RequestName(this);
+                    if(name == null)
+                        return;
+                }
+                TaskModel.AddParticipant(name, ParticipantType.Station);
+            }
+            catch (DuplicateNameException)
+            {
+                MessageBox.Show("Участник с таким именем уже существует", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static int _consumersCounter;
+        private void AddConsumer_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string name;
+                if (App.IsDebug)
+                {
+                    name = "Consumer_" + _consumersCounter++;
+                }
+                else
+                {
+                    name = NameRequestWindow.RequestName(this);
+                    if (name == null)
+                        return;
+                }
+                TaskModel.AddParticipant(name, ParticipantType.Consumer);
+            }
+            catch (DuplicateNameException)
+            {
+                MessageBox.Show("Участник с таким именем уже существует", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static int _featuresCounter;
+        private void AddFeature_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string name;
+                if (App.IsDebug)
+                {
+                    name = "Feature_" + _featuresCounter++;
+                }
+                else
+                {
+                    name = NameRequestWindow.RequestName(this);
+                    if (name == null)
+                        return;
+                }
+                TaskModel.AddFeature(name);
+                RefreshColumns();
+            }
+            catch (DuplicateNameException)
+            {
+                MessageBox.Show("Свойство с таким именем уже существует", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void TestMenuItem1_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var calc = new Calculator();
@@ -169,62 +262,8 @@ namespace Energy.UI
             RefreshColumns();
         }
 
-        private static int _stationsCounter;
-        private void AddStation_OnClick(object sender, RoutedEventArgs e)
-        {
-            string name;
-            if (App.IsDebug)
-            {
-                name = "Station_" + _stationsCounter++;
-            }
-            else
-            {
-                name = RequestName();
-                if(name == null)
-                    return;
-            }
-            TaskModel.AddParticipant(name, ParticipantType.Station);
-        }
-
-        private static int _consumersCounter;
-        private void AddConsumer_OnClick(object sender, RoutedEventArgs e)
-        {
-            string name;
-            if (App.IsDebug)
-            {
-                name = "Consumer_" + _consumersCounter++;
-            }
-            else
-            {
-                name = RequestName();
-                if (name == null)
-                    return;
-            }
-            TaskModel.AddParticipant(name, ParticipantType.Consumer);
-        }
-
-        private static int _featuresCounter;
-        private void AddFeature_OnClick(object sender, RoutedEventArgs e)
-        {
-            string name;
-            if (App.IsDebug)
-            {
-                name = "Feature_" + _featuresCounter++;
-            }
-            else
-            {
-                name = RequestName();
-                if (name == null)
-                    return;
-            }
-            TaskModel.AddFeature(name);
-            RefreshColumns();
-        }
-
         private void TestMenuItem2_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var w = new EditLinkWindow(null, true);
-            w.ShowDialog();
         }
     }
 }
@@ -232,4 +271,4 @@ namespace Energy.UI
 //TODO: Попробовать сделать GraphControl составным, чтобы можно было биндиться к некомпозитной коллекции
 //TODO: Надписи на линках другим цветом
 //TODO: Несвязный граф!!!!
-//TODO: Окна появляются непонятно где
+//TODO: Кеширование контролов для исключения перерисовки

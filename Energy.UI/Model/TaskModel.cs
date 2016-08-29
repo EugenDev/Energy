@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -38,6 +39,9 @@ namespace Energy.UI.Model
 
         public void AddParticipant(string name, ParticipantType participantType)
         {
+            if (Stations.Any(s => s.Name.Equals(name)) || Consumers.Any(c => c.Name.Equals(name)))
+                throw new DuplicateNameException();
+
             switch (participantType)
             {
                 case ParticipantType.Consumer:
@@ -77,6 +81,9 @@ namespace Energy.UI.Model
 
         public void AddFeature(string featureName)
         {
+            if (FeaturesNames.Any(featureName.Equals))
+                throw new DuplicateNameException();
+
             FeaturesNames.Add(featureName);
             AddFeatureToCollection(Stations, featureName);
             AddFeatureToCollection(Consumers, featureName);
@@ -103,23 +110,8 @@ namespace Energy.UI.Model
                 item.Remove(featureName);
         }
 
-        public void AddLink(ModelBase from, ModelBase to)
+        public void AddLink(LinkModel link)
         {
-            var link = new LinkModel(from, to);
-            if (App.IsDebug)
-            {
-                var r = new Random(DateTime.Now.Millisecond);
-                link.Distance = r.Next(5, 20);
-                link.Conduction = r.Next(1, 4);
-            }
-            else
-            {
-                var editWindow = new EditLinkWindow(link, true);
-                editWindow.ShowDialog();
-                var dialogResult = editWindow.DialogResult;
-                if (!dialogResult.HasValue || !dialogResult.Value)
-                    return;
-            }
             Links.Add(link);
         }
 

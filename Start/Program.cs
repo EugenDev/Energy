@@ -26,7 +26,7 @@ namespace Start
 
                 var matrixS = ReadMatrix(lines, currentIndex);
 
-                var answer = MainSolver.Solve(matrixR, matrixS);
+                var answer = MainSolver.SolveSimple(matrixR, matrixS);
                 WriteAnswer("output.txt", answer);
             }
             catch (Exception exception)

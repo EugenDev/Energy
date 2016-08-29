@@ -47,6 +47,8 @@
     <Compile Include="PathFinding\Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MainSolver.cs" />
+    <Compile Include="SolveResultPrinter.cs" />
+    <Compile Include="TaskSolveResult.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

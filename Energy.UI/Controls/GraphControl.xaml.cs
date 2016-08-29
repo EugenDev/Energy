@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 using Energy.UI.Controls.WorkArea;
 using Energy.UI.Helpers;
 using Energy.UI.Model;
@@ -28,13 +25,6 @@ namespace Energy.UI.Controls
             SetStartMode();
             SelectedElements = new HashSet<ModelBase>();
             Loaded += GraphControl_Loaded;
-        }
-
-        public event EventHandler<LinkAddedEventArgs> LinkAdded;
-
-        internal void AddLink(ModelBase from, ModelBase to)
-        {
-            LinkAdded?.Invoke(this, new LinkAddedEventArgs(from, to));
         }
 
         private void GraphControl_Loaded(object sender, RoutedEventArgs e)
@@ -104,25 +94,37 @@ namespace Energy.UI.Controls
             SelectedElements.Clear();
         }
 
-        public void AddLink()
+        public event EventHandler<LinkAddedEventArgs> WantAddLink;
+        internal void OnWantAddLink(ModelBase from, ModelBase to)
         {
-            ClearSelection();
-            SetMode(new AddLinkMode(this));
+            WantAddLink?.Invoke(this, new LinkAddedEventArgs(from, to));
         }
 
-        public event EventHandler<ObjectEventArgs<ModelBase>> ElementDeleted;
-        internal void OnElementDeleted(ModelBase element)
+        public event EventHandler<ObjectEventArgs<LinkModel>> WantDeleteLink;
+        internal void OnWantDeleteLink(LinkModel element)
         {
-            ElementDeleted?.Invoke(this, new ObjectEventArgs<ModelBase>(element));
+            WantDeleteLink?.Invoke(this, new ObjectEventArgs<LinkModel>(element));
         }
 
-        public event EventHandler<ObjectEventArgs<LinkModel>> LinkDeleted;
-        internal void OnLinkDeleted(LinkModel element)
+        public event EventHandler<ObjectEventArgs<LinkModel>> WantEditLink;
+        internal void OnWantEditLink(LinkModel element)
         {
-            LinkDeleted?.Invoke(this, new ObjectEventArgs<LinkModel>(element));
+            WantEditLink?.Invoke(this, new ObjectEventArgs<LinkModel>(element));
+        }
+        
+        public event EventHandler<ObjectEventArgs<ModelBase>> WantEditElement;
+        internal void OnWantEditElement(ModelBase element)
+        {
+            WantEditElement?.Invoke(this, new ObjectEventArgs<ModelBase>(element));
         }
 
-        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        public event EventHandler<ObjectEventArgs<ModelBase>> WantDeleteElement;
+        internal void OnWantDeleteElement(ModelBase element)
+        {
+            WantDeleteElement?.Invoke(this, new ObjectEventArgs<ModelBase>(element));
+        }
+
+        private void DeleteMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var model = ModelBindingHelper.TryGetBoundItem(sender as DependencyObject);
             if (model == null)
@@ -130,10 +132,24 @@ namespace Energy.UI.Controls
                 var linkModel = ModelBindingHelper.TryGetLinkItem(sender as DependencyObject);
                 if (linkModel == null)
                     return;
-                OnLinkDeleted(linkModel);
+                OnWantDeleteLink(linkModel);
             }
             else
-                OnElementDeleted(model);
+                OnWantDeleteElement(model);
+        }
+
+        private void EditMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var model = ModelBindingHelper.TryGetBoundItem(sender as DependencyObject);
+            if (model == null)
+            {
+                var linkModel = ModelBindingHelper.TryGetLinkItem(sender as DependencyObject);
+                if (linkModel == null)
+                    return;
+                OnWantEditLink(linkModel);
+            }
+            else
+                OnWantEditElement(model);
         }
     }
 }

@@ -11,7 +11,8 @@
 
     <ItemsControl.Resources>
         <ContextMenu x:Key="DeleteElementMenuItem">
-            <MenuItem  Header="Удалить" Click="MenuItem_OnClick"/>
+            <MenuItem Header="Изменить" Click="EditMenuItem_OnClick" />
+            <MenuItem Header="Удалить" Click="DeleteMenuItem_OnClick" />
         </ContextMenu>
         
         <converters:CoordinatesConverter x:Key="CoordinatesConverter" />
@@ -21,7 +22,7 @@
             <Grid Width="100" Height="100" ContextMenu="{StaticResource DeleteElementMenuItem}" >
                 <Polygon Points="6,94 94,94 85,10 80,10 75,85 70,85 70,50 6,50" Fill="Black" Stroke="Black" />
                 <Polygon Points="41,60 45,60 40,70 45,70 34,83 38,74 35,74" Fill="Yellow" Stroke="White" />
-                <TextBlock Text="{Binding Name}" Margin="5" />
+                <TextBlock Text="{Binding Name}" TextWrapping="Wrap" MaxWidth="70" HorizontalAlignment="Left" Margin="5,0,0,0" />
                 <Rectangle Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
             </Grid>
         </DataTemplate>
@@ -29,7 +30,7 @@
         <DataTemplate DataType="{x:Type model:ConsumerModel}">
             <Grid Margin="0,50,0,0" Width="100" Height="50" ContextMenu="{StaticResource DeleteElementMenuItem}">
                 <Border BorderThickness="2" BorderBrush="Black" Background="LightSalmon" CornerRadius="10">
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Name}" VerticalAlignment="Center" />
+                    <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Name}" MaxHeight="50" VerticalAlignment="Center" />
                 </Border>
                 <Rectangle RadiusX="10" RadiusY="10" Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
             </Grid>

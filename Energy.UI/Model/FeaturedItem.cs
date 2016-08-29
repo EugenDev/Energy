@@ -4,12 +4,19 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using Energy.UI.Annotations;
 
 namespace Energy.UI.Model
 {
-    public class FeaturedItem : Dictionary<string, double>, ICustomTypeDescriptor
+    public class FeaturedItem : Dictionary<string, double>, ICustomTypeDescriptor, INotifyPropertyChanged
     {
-        public string Name { get; }
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; OnPropertyChanged(); }
+        }
         private readonly ObservableCollection<string> _featuresNames;
 
         public FeaturedItem(string name, ObservableCollection<string> featuresNames)
@@ -17,7 +24,7 @@ namespace Energy.UI.Model
             if (featuresNames == null)
                 throw new ArgumentException("featuresNames");
 
-            Name = name;
+            _name = name;
             _featuresNames = featuresNames;
 
             foreach (var featureName in featuresNames)
@@ -33,6 +40,14 @@ namespace Energy.UI.Model
                 resultList.Add(this[featureName].ToString("0.00", CultureInfo.InvariantCulture));
             
             return string.Join(",", resultList);
+        }
+        
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #region ICustomTypeDescriptorMemebers

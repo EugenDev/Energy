@@ -6,12 +6,22 @@ namespace Energy.Solving
 {
 	public class MainSolver
 	{
-	    public static int[][] Solve(double[,] matrixR, double[,] matrixS)
+	    public static int[][] SolveSimple(double[,] matrixR, double[,] matrixS)
 	    {
 	        var matrixT = GetT(matrixR, matrixS);
 	        var matrixW = GetW(matrixT);
 	        var treshold = GetTreshold(matrixW);
 	        return GetZones(matrixT, treshold);
+	    }
+
+	    public static TaskSolveResult Solve(double[,] matrixR, double[,] matrixS)
+	    {
+	        var result = new TaskSolveResult { MatrixR = matrixR, MatrixS = matrixS };
+	        result.MatrixT = GetT(result.MatrixR, result.MatrixS);
+	        result.MatrixW = GetW(result.MatrixT);
+            var treshold = GetTreshold(result.MatrixW);
+            result.Result = GetZones(result.MatrixT, treshold);
+            return result;
 	    }
 
         public static double [,] GetT(double [,] R, double [,] S)

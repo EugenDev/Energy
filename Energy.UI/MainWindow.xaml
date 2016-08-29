@@ -52,10 +52,9 @@
             <MenuItem Header="Добавить">
                 <MenuItem Name="AddStation" Header="Станцию" Click="AddStation_OnClick" />
                 <MenuItem Name="AddConsumer" Header="Потребителя" Click="AddConsumer_OnClick"/>
-                <MenuItem Name="AddFeature" Header="Фичу" Click="AddFeature_OnClick" />
+                <MenuItem Name="AddFeature" Header="Свойство" Click="AddFeature_OnClick" />
             </MenuItem>
             <MenuItem Header="Тест">
-                <MenuItem Name="GenerateDataMenuItem"  Header="Сгенерировать данные" Click="GenerateDataMenuItem_OnClick"/>
                 <MenuItem Name="TestMenuItem1" Header="Просто тест 1" Click="TestMenuItem1_OnClickestMenuItem_OnClick" />
                 <MenuItem Name="TestMenuItem2" Header="Просто тест 2" Click="TestMenuItem2_OnClickestMenuItem_OnClick" />
             </MenuItem>
@@ -73,9 +72,9 @@
             <TabItem Header="Потребители">
                 <DataGrid x:Name="ConsumersDataGrid" ItemsSource="{Binding Consumers}" />
             </TabItem>
-            
+
             <TabItem Header="Результат">
-                <Label Content="Тут пока ничего нет ..." VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
+                <TextBox Name="ResultTextBox" />
             </TabItem>
 
         </TabControl>
@@ -88,7 +87,7 @@
                 <TextBlock Text="{Binding Consumers.Count, StringFormat='Потребителей: \{0\}'}" />
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="{Binding FeaturesNames.Count, StringFormat='Фич: \{0\}'}" />
+                <TextBlock Text="{Binding FeaturesNames.Count, StringFormat='Свойств: \{0\}'}" />
             </StatusBarItem>
         </StatusBar>
     </Grid>

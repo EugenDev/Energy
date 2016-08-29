@@ -29,7 +29,8 @@ namespace Energy.UI.Controls.WorkArea
             if (_fromElement == element)
                 return;
             
-            GraphControl.AddLink(_fromElement, element);
+            GraphControl.OnWantAddLink(_fromElement, element);
+            GraphControl.SetStartMode();
         }
 
         public override void ProcessKeyUp(KeyEventArgs args)
