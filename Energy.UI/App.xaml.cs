@@ -7,6 +7,6 @@ namespace Energy.UI
     /// </summary>
     public partial class App : Application
     {
-        public static bool IsDebug => false;
+        public static bool IsDebug => true;
     }
 }

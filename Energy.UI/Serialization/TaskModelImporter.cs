@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Energy.UI.Model;
 
 namespace Energy.UI.Serialization
@@ -10,7 +11,7 @@ namespace Energy.UI.Serialization
             var result = new TaskModel();
             var lineNumber = 0;
 
-            var featuresNames = lines[lineNumber++].Split(';');
+            var featuresNames = lines[lineNumber++].Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var featureName in featuresNames)
                 result.FeaturesNames.Add(featureName);
 
@@ -19,7 +20,7 @@ namespace Energy.UI.Serialization
             var stationsCount = int.Parse(lines[lineNumber++]);
             for (var i = 0; i < stationsCount; i++)
             {
-                var stationParts = lines[lineNumber++].Split(';');
+                var stationParts = lines[lineNumber++].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 var station = new StationModel(stationParts[0], result.FeaturesNames)
                 {
                     X = double.Parse(stationParts[1]),
@@ -36,7 +37,7 @@ namespace Energy.UI.Serialization
             var consumersCount = int.Parse(lines[lineNumber++]);
             for (var i = 0; i < consumersCount; i++)
             {
-                var consumerParts = lines[lineNumber++].Split(';');
+                var consumerParts = lines[lineNumber++].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 var consumer = new ConsumerModel(consumerParts[0], result.FeaturesNames)
                 {
                     X = double.Parse(consumerParts[1]),

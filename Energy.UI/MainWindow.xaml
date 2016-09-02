@@ -19,7 +19,7 @@
         </DataTemplate>
         
         <Style TargetType="StatusBarItem">
-            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontSize" Value="14" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         
@@ -39,7 +39,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition />
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
         
         <Menu Grid.Column="0" Grid.Row="0">
@@ -62,7 +62,17 @@
 
         <TabControl Grid.Row="1">
             <TabItem Header="Визуализация">
-                <controls:GraphControl x:Name="GraphControl" ItemsSource="{Binding Controls, Mode=OneWay}" />
+                <ScrollViewer Name="ScrollViewer" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" >
+                        <controls:GraphControl x:Name="GraphControl" ItemsSource="{Binding Controls, Mode=OneWay}" VerticalAlignment="Top" HorizontalAlignment="Left">
+                            <controls:GraphControl.LayoutTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="0.01" ScaleY="0.01"/>
+                                    <ScaleTransform ScaleX="{Binding Path=CanvasScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=energyUi:MainWindow}}" 
+                                                    ScaleY="{Binding Path=CanvasScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=energyUi:MainWindow}}" />
+                                </TransformGroup>
+                            </controls:GraphControl.LayoutTransform>
+                        </controls:GraphControl>
+                </ScrollViewer>
             </TabItem>
             
             <TabItem Header="Станции">
@@ -88,6 +98,13 @@
             </StatusBarItem>
             <StatusBarItem>
                 <TextBlock Text="{Binding FeaturesNames.Count, StringFormat='Свойств: \{0\}'}" />
+            </StatusBarItem>
+            <StatusBarItem Name="ScalingTool" HorizontalAlignment="Right" >
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding ElementName=ScalingSlider, Path=Value, StringFormat='\{0\}%'}" TextAlignment="Right" Width="40" FontSize="16" VerticalAlignment="Center" />
+                    <Slider x:Name="ScalingSlider" Margin="1" Width="74" Minimum="30" Maximum="200" IsSnapToTickEnabled="True" TickFrequency="10" TickPlacement="TopLeft" Cursor="SizeWE" 
+                            Value="{Binding Path=CanvasScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=energyUi:MainWindow}}" />
+                </StackPanel>
             </StatusBarItem>
         </StatusBar>
     </Grid>

@@ -25,7 +25,15 @@ namespace Energy.UI
             get { return (TaskModel) DataContext; }
             set { DataContext = value; }
         }
-        
+
+        public double CanvasScale
+        {
+            get { return (double)GetValue(CanvasScaleProperty); }
+            set { SetValue(CanvasScaleProperty, value); }
+        }
+        public static readonly DependencyProperty CanvasScaleProperty =
+            DependencyProperty.Register("CanvasScale", typeof(double), typeof(MainWindow));
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,6 +46,8 @@ namespace Energy.UI
             GraphControl.WantDeleteLink += GraphControlOnWantDeleteLink;
             GraphControl.WantEditLink += GraphControl_WantEditLink;
             GraphControl.WantEditElement += GraphControl_WantEditElement;
+
+            CanvasScale = 100;
         }
 
         private void GraphControl_WantEditElement(object sender, ObjectEventArgs<ModelBase> e)

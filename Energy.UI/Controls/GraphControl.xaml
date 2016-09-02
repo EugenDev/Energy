@@ -49,7 +49,7 @@
     
     <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
-            <Canvas Name="MainCanvas" Background="Azure" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+            <Canvas Name="MainCanvas" Width="5400" Height="3600" Background="Azure" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
         </ItemsPanelTemplate>
     </ItemsControl.ItemsPanel>
 
