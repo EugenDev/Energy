@@ -58,15 +58,15 @@ namespace Energy.UI.Serialization
             var rowsCount = taskModel.FeaturesNames.Count;
             var result = new double[rowsCount, columnsCount];
 
-            var row = 0;
+            var column = 0;
             foreach (var station in taskModel.Stations)
             {
-                var column = 0;
+                var row = 0;
                 foreach (var columnsName in taskModel.FeaturesNames)
                 {
-                    result[row, column++] = station[columnsName];
+                    result[row++, column] = station[columnsName];
                 }
-                row++;
+                column++;
             }
 
             return result;

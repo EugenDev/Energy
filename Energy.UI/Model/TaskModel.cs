@@ -37,7 +37,9 @@ namespace Energy.UI.Model
                 new CollectionContainer {Collection = Consumers}
             };
         }
-        
+
+        public bool IsValid => Consumers.Count != 0 && Stations.Count != 0;
+
         public void AddParticipant(string name, ParticipantType participantType)
         {
             if (Stations.Any(s => s.Name.Equals(name)) || Consumers.Any(c => c.Name.Equals(name)))

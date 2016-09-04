@@ -171,6 +171,11 @@ namespace Energy.UI
         {
             try
             {
+                RecalculateDistancesItem_OnClick(null, null);
+
+                if (!TaskModel.IsValid)
+                    throw new InvalidOperationException("Отсутствуют станции или потребители");
+                
                 var rMatrix = TaskModelExporter.GetRMatrix(TaskModel);
                 var sMatrix = TaskModelExporter.GetSMatrix(TaskModel);
 

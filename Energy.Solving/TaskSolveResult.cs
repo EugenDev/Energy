@@ -10,6 +10,8 @@
 
         public double[,] MatrixW { get; set; }
 
+        public double Treshold { get; set; }
+
         public int[][] Result { get; set; }
     }
 }

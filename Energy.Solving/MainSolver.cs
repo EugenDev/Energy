@@ -19,8 +19,8 @@ namespace Energy.Solving
 	        var result = new TaskSolveResult { MatrixR = matrixR, MatrixS = matrixS };
 	        result.MatrixT = GetT(result.MatrixR, result.MatrixS);
 	        result.MatrixW = GetW(result.MatrixT);
-            var treshold = GetTreshold(result.MatrixW);
-            result.Result = GetZones(result.MatrixT, treshold);
+            result.Treshold= GetTreshold(result.MatrixW);
+            result.Result = GetZones(result.MatrixT, result.Treshold);
             return result;
 	    }
 
@@ -31,7 +31,7 @@ namespace Energy.Solving
 				throw new InvalidOperationException("Некорректные размеры входных матриц");
 			}
 			var n = R.GetLength(0);
-			var p = R.GetLength(1);
+			var p = S.GetLength(1);
 
 			var result = new double[n, p];
 
