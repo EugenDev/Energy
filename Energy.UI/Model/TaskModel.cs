@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Energy.UI.Controls;
-using Energy.UI.Windows;
 
 namespace Energy.UI.Model
 {
@@ -21,9 +20,11 @@ namespace Energy.UI.Model
 
         public CompositeCollection Controls { get; }
         
+        public bool NeedDistanceRecalculation { get; set; }
+
         public TaskModel()
         {
-            FeaturesNames = new ObservableCollection<string> {"Расстояние", "Проводимость"};
+            FeaturesNames = new ObservableCollection<string> (Constants.ConstantFeatures);
 
             Stations = new ObservableCollection<StationModel>();
             Consumers = new ObservableCollection<ConsumerModel>();
@@ -36,7 +37,7 @@ namespace Energy.UI.Model
                 new CollectionContainer {Collection = Consumers}
             };
         }
-
+        
         public void AddParticipant(string name, ParticipantType participantType)
         {
             if (Stations.Any(s => s.Name.Equals(name)) || Consumers.Any(c => c.Name.Equals(name)))
@@ -99,6 +100,8 @@ namespace Energy.UI.Model
 
         public void RemoveFeature(string featureName)
         {
+            if(Constants.ConstantFeatures.Contains(featureName))
+                throw new InvalidOperationException("Невозможно удалить постоянное свойство " + featureName);
             RemoveFeatureFromCollection(Stations, featureName);
             RemoveFeatureFromCollection(Consumers, featureName);
             FeaturesNames.Remove(featureName);
@@ -114,7 +117,7 @@ namespace Energy.UI.Model
         {
             Links.Add(link);
         }
-
+        
         public void DeletLink(LinkModel linkModel)
         {
             Links.Remove(linkModel);
@@ -133,7 +136,7 @@ namespace Energy.UI.Model
             {
                 Header = featureName,
                 Binding = new Binding { Path = new PropertyPath(featureName) },
-                IsReadOnly = featureName.Equals("Расстояние") || featureName.Equals("Проводимость")
+                IsReadOnly = Constants.ConstantFeatures.Contains(featureName)
             };
         }
     }

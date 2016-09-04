@@ -9,18 +9,18 @@ namespace Energy.UI.Serialization
         public static string ToText(TaskModel taskModel)
         {
             var builder = new StringBuilder(); 
-            builder.AppendLine(string.Join(";", taskModel.FeaturesNames.Where(f => !f.Equals("Расстояние") && !f.Equals("Проводимость"))));
+            builder.AppendLine(string.Join(";", taskModel.FeaturesNames.Where(f => !Constants.ConstantFeatures.Contains(f))));
 
             builder.AppendLine(taskModel.Stations.Count.ToString());
             foreach (var station in taskModel.Stations)
             {
-                var featuresValues = string.Join(";", station.Where(f => !f.Key.Equals("Расстояние") && !f.Key.Equals("Проводимость")).Select(f => station[f.Key]));
+                var featuresValues = string.Join(";", station.Where(f => !Constants.ConstantFeatures.Contains(f.Key)).Select(f => station[f.Key]));
                 builder.AppendLine($"{station.Name};{station.X};{station.Y};{featuresValues}");
             }
             builder.AppendLine(taskModel.Consumers.Count.ToString());
             foreach (var consumer in taskModel.Consumers)
             {
-                var featuresValues = string.Join(";", consumer.Where(f => !f.Key.Equals("Расстояние") && !f.Key.Equals("Проводимость")).Select(f => consumer[f.Key]));
+                var featuresValues = string.Join(";", consumer.Where(f => !Constants.ConstantFeatures.Contains(f.Key)).Select(f => consumer[f.Key]));
                 builder.AppendLine($"{consumer.Name};{consumer.X};{consumer.Y};{featuresValues}");
             }
             builder.AppendLine(taskModel.Links.Count.ToString());

@@ -7,7 +7,7 @@
         xmlns:model="clr-namespace:Energy.UI.Model"
         xmlns:controls="clr-namespace:Energy.UI.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800">
+        Title="Энергисистема v1.0" Height="500" Width="800">
 
     <Window.DataContext>
         <model:TaskModel/>
@@ -42,11 +42,12 @@
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
         
-        <Menu Grid.Column="0" Grid.Row="0">
+        <Menu Name="MainMenu" Grid.Column="0" Grid.Row="0">
             <MenuItem Header="Задача">
                 <MenuItem Name="NewTaskMenuItem" Header="Новая" Click="NewTaskMenuItem_OnClick"/>
                 <MenuItem Name="LoadTaskMenuItem" Header="Загрузить" Click="LoadTaskMenuItem_OnClick"/>
                 <MenuItem Name="SaveTaskMenuItem" Header="Сохранить" Click="SaveTaskMenuItem_OnClick"/>
+                <MenuItem Name="RecalculateDistancesItem" Header="Персчитать расстояния" Click="RecalculateDistancesItem_OnClick" />
                 <MenuItem Name="SolveTaskMenuItem" Header="Решить" Click="SolveTaskMenuItem_OnClick" />
             </MenuItem>
             <MenuItem Header="Добавить">
@@ -54,9 +55,10 @@
                 <MenuItem Name="AddConsumer" Header="Потребителя" Click="AddConsumer_OnClick"/>
                 <MenuItem Name="AddFeature" Header="Свойство" Click="AddFeature_OnClick" />
             </MenuItem>
-            <MenuItem Header="Тест">
-                <MenuItem Name="TestMenuItem1" Header="Просто тест 1" Click="TestMenuItem1_OnClickestMenuItem_OnClick" />
-                <MenuItem Name="TestMenuItem2" Header="Просто тест 2" Click="TestMenuItem2_OnClickestMenuItem_OnClick" />
+            <MenuItem Header="Удалить">
+                <MenuItem Name="RemoveStation" Header="Станцию" Click="RemoveStation_OnClick" />
+                <MenuItem Name="RemoveConsumer" Header="Потребителя" Click="RemoveConsumer_OnClick"/>
+                <MenuItem Name="RemoveFeature" Header="Свойство" Click="RemoveFeature_OnClick" />
             </MenuItem>
         </Menu>
 
@@ -102,7 +104,7 @@
             <StatusBarItem Name="ScalingTool" HorizontalAlignment="Right" >
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock Text="{Binding ElementName=ScalingSlider, Path=Value, StringFormat='\{0\}%'}" TextAlignment="Right" Width="40" FontSize="16" VerticalAlignment="Center" />
-                    <Slider x:Name="ScalingSlider" Margin="1" Width="74" Minimum="30" Maximum="200" IsSnapToTickEnabled="True" TickFrequency="10" TickPlacement="TopLeft" Cursor="SizeWE" 
+                    <Slider x:Name="ScalingSlider" Margin="1" Width="74" Minimum="40" Maximum="200" IsSnapToTickEnabled="True" TickFrequency="10" TickPlacement="TopLeft" Cursor="SizeWE" 
                             Value="{Binding Path=CanvasScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=energyUi:MainWindow}}" />
                 </StackPanel>
             </StatusBarItem>

@@ -38,5 +38,22 @@ namespace Energy.UI.Helpers
                 currentElement = parent;
             }
         }
+
+        public static T GetParent<T>(DependencyObject currentElement) 
+            where T: DependencyObject
+        {
+            while (true)
+            {
+                var parent = VisualTreeHelper.GetParent(currentElement);
+
+                if (parent == null)
+                    return null;
+
+                if (currentElement is T)
+                    return (T)currentElement;
+
+                currentElement = parent;
+            }
+        }
     }
 }

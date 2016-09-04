@@ -61,11 +61,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Calculations\Calculator.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Controls\GeometryHelper.cs" />
     <Compile Include="Controls\GraphControl.xaml.cs">
       <DependentUpon>GraphControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LinkAddedEventArgs.cs" />
     <Compile Include="Controls\LinkControl.cs" />
+    <Compile Include="Controls\LinkDistance.cs" />
     <Compile Include="Controls\ObjectEventArgs.cs" />
     <Compile Include="Controls\TestCanvas.xaml.cs">
       <DependentUpon>TestCanvas.xaml</DependentUpon>
@@ -89,6 +92,9 @@
     <Compile Include="Serialization\TaskModelExporter.cs" />
     <Compile Include="Serialization\TaskModelImporter.cs" />
     <Compile Include="Model\TaskModel.cs" />
+    <Compile Include="Windows\ChooseItemWindow.xaml.cs">
+      <DependentUpon>ChooseItemWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\EditLinkWindow.xaml.cs">
       <DependentUpon>EditLinkWindow.xaml</DependentUpon>
     </Compile>
@@ -116,6 +122,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\ChooseItemWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\EditLinkWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

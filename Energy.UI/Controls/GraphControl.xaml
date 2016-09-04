@@ -37,13 +37,21 @@
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type model:LinkModel}">
-            <controls:LinkControl X1="{Binding Path=From.X, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
-                    Y1="{Binding Path=From.Y, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
-                    X2="{Binding Path=To.X, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
-                    Y2="{Binding Path=To.Y, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
-                    Conduction="{Binding Conduction}" Distance="{Binding Distance}" Stroke="LightSkyBlue" 
-                    StrokeThickness="1" ContextMenu="{StaticResource DeleteElementMenuItem}">
-            </controls:LinkControl>
+            <Canvas>
+                <controls:LinkControl X1="{Binding Path=From.X, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                        Y1="{Binding Path=From.Y, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                        X2="{Binding Path=To.X, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                        Y2="{Binding Path=To.Y, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                        Conduction="{Binding Conduction}" Stroke="LightSkyBlue" StrokeThickness="1" 
+                        ContextMenu="{StaticResource DeleteElementMenuItem}">
+                </controls:LinkControl>
+                <controls:LinkDistance X1="{Binding Path=From.X, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                        Y1="{Binding Path=From.Y, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                        X2="{Binding Path=To.X, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                        Y2="{Binding Path=To.Y, Mode=OneWay, Converter={StaticResource CoordinatesConverter}}" 
+                        Distance="{Binding Distance}" Stroke="Black" StrokeThickness="1">
+                </controls:LinkDistance>
+            </Canvas>
         </DataTemplate>
     </ItemsControl.Resources>
     

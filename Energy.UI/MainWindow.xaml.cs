@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using Energy.Solving;
 using Energy.UI.Calculations;
 using Energy.UI.Controls;
@@ -12,6 +11,7 @@ using Energy.UI.Model;
 using Energy.UI.Serialization;
 using Energy.UI.Windows;
 using Microsoft.Win32;
+using DataGrid = System.Windows.Controls.DataGrid;
 
 namespace Energy.UI
 {
@@ -48,6 +48,9 @@ namespace Energy.UI
             GraphControl.WantEditElement += GraphControl_WantEditElement;
 
             CanvasScale = 100;
+
+            if (App.IsDebug)
+                CreateTestMenu();
         }
 
         private void GraphControl_WantEditElement(object sender, ObjectEventArgs<ModelBase> e)
@@ -97,13 +100,6 @@ namespace Energy.UI
                     return;
             }
             TaskModel.AddLink(link);
-        }
-
-        private void RemoveFeature_Click(object sender, RoutedEventArgs e)
-        {
-            var selectedColumn = ConsumersDataGrid.SelectedCells[0].Column;
-            var featureName = ((selectedColumn as DataGridTextColumn).Binding as Binding).Path.Path;
-            TaskModel.RemoveFeature(featureName);
         }
         
         private void RefreshColumns()
@@ -265,20 +261,68 @@ namespace Energy.UI
             }
         }
 
-        private void TestMenuItem1_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void CreateTestMenu()
+        {
+            var menu = new MenuItem { Header = "Тест" };
+            var menuItem = new MenuItem { Header = "Тест 1" };
+            menuItem.Click += TestMenuItem1_OnClick;
+            menu.Items.Add(menuItem);
+            menuItem = new MenuItem { Header = "Тест 2" };
+            menuItem.Click += TestMenuItem2_OnClick;
+            menu.Items.Add(menuItem);
+            MainMenu.Items.Add(menu);
+        }
+
+        private void TestMenuItem1_OnClick(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void TestMenuItem2_OnClick(object sender, RoutedEventArgs e)
+        {
+            var res = Validation.GetHasError(StationsDataGrid);
+        }
+
+        private void RecalculateDistancesItem_OnClick(object sender, RoutedEventArgs e)
         {
             var calc = new Calculator();
             calc.ReCalculateDistances(TaskModel);
             RefreshColumns();
         }
 
-        private void TestMenuItem2_OnClickestMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void RemoveStation_OnClick(object sender, RoutedEventArgs e)
         {
+            var choosedItem = ChooseItemWindow.ShowChooseDialog(TaskModel.Stations.Select(c => c.Name).ToList(), this);
+            if (choosedItem == null)
+                return;
+
+            TaskModel.DeleteParticipant(TaskModel.Stations.First(x => x.Name.Equals(choosedItem)));
+        }
+
+        private void RemoveConsumer_OnClick(object sender, RoutedEventArgs e)
+        {
+            var choosedItem = ChooseItemWindow.ShowChooseDialog(TaskModel.Consumers.Select(c => c.Name).ToList(), this);
+            if (choosedItem == null)
+                return;
+
+            TaskModel.DeleteParticipant(TaskModel.Consumers.First(x => x.Name.Equals(choosedItem)));
+        }
+
+        private void RemoveFeature_OnClick(object sender, RoutedEventArgs e)
+        {
+            var featuresNames = TaskModel
+                .FeaturesNames
+                .Where(f => !Constants.ConstantFeatures.Contains(f))
+                .ToList();
+            var choosedItem = ChooseItemWindow.ShowChooseDialog(featuresNames, this);
+            if (choosedItem == null)
+                return;
+
+            TaskModel.RemoveFeature(choosedItem);
+            RefreshColumns();
         }
     }
 }
 
 //TODO: Попробовать сделать GraphControl составным, чтобы можно было биндиться к некомпозитной коллекции
-//TODO: Надписи на линках другим цветом
 //TODO: Несвязный граф!!!!
 //TODO: Кеширование контролов для исключения перерисовки
