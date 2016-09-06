@@ -11,13 +11,13 @@ namespace Energy.UI.Model
             : base(name, featuresNames)
         {
             ParticipantType = ParticipantType.Consumer;
-            Zones = new List<StationModel>();
+            Zones = new ObservableCollection<StationModel>();
         }
 
         public string ZonesDescription => Zones.Count == 0 
             ? "Не находится ни в чьей зоне влияния"
             : "Находится в зоне влияния:\n" + string.Join("\n", Zones.Select(i => i.Name));
 
-        public List<StationModel> Zones { get; }
+        public ObservableCollection<StationModel> Zones { get; }
     }
 }

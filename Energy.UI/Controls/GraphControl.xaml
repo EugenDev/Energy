@@ -24,19 +24,39 @@
                 <Polygon Points="41,60 45,60 40,70 45,70 34,83 38,74 35,74" Fill="Yellow" Stroke="White" />
                 <TextBlock Text="{Binding Name}" TextWrapping="Wrap" MaxWidth="70" HorizontalAlignment="Left" Margin="5,0,0,0" />
                 <Ellipse Canvas.Left="10" Canvas.Top="80" Height="10" Width="10" Fill="{Binding TagBrush}"  />
-                <Rectangle Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
+                <Rectangle Width="100" Height="100" Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
             </Canvas>
         </DataTemplate>
         
         <DataTemplate DataType="{x:Type model:ConsumerModel}">
-            <Grid Margin="0,50,0,0" Width="100" Height="50" ContextMenu="{StaticResource DeleteElementMenuItem}">
-                <Border BorderThickness="2" BorderBrush="Black" Background="LightSalmon" CornerRadius="10">
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Name}" MaxHeight="50" VerticalAlignment="Center" />
+            <Grid Margin="0,20,0,0" Width="100" Height="80" ContextMenu="{StaticResource DeleteElementMenuItem}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Name}" MaxHeight="50" VerticalAlignment="Center" />
+                <Border Grid.Row="1" BorderThickness="2" BorderBrush="Black" Background="LightSalmon" CornerRadius="10">
+                    <ItemsControl ItemsSource="{Binding Zones}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel FlowDirection="RightToLeft" >
+                                    <WrapPanel.LayoutTransform>
+                                        <RotateTransform Angle="180"></RotateTransform>
+                                    </WrapPanel.LayoutTransform>
+                                </WrapPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type model:StationModel}">
+                                <Ellipse Margin="2.5" Width="15" Height="15" Stroke="Black" StrokeThickness="1" Fill="{Binding TagBrush}" />
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+                    </ItemsControl>
                     <Border.ToolTip>
                         <TextBlock Text="{Binding Path=ZonesDescription, Mode=OneWay}" />
                     </Border.ToolTip>
                 </Border>
-                <Rectangle RadiusX="10" RadiusY="10" Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
+                <Rectangle Grid.Row="0" Grid.RowSpan="2" RadiusX="10" RadiusY="10" Fill="LightBlue" Opacity="0.7" Visibility="{Binding Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter} }" />
             </Grid>
         </DataTemplate>
 

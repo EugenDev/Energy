@@ -187,7 +187,7 @@ namespace Energy.UI
                 ResultTextBox.Text = printedResult;
                 File.WriteAllText("result.txt", printedResult);
                 TaskModel.SetResult(result.Result);
-                MainTabControl.SelectedItem = ResultTabItem;
+                MessageBox.Show("Задача решена", "");
             }
             catch (Exception ex)
             {
