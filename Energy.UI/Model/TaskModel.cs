@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Energy.UI.Controls;
+using Energy.UI.Helpers;
 
 namespace Energy.UI.Model
 {
@@ -52,7 +53,7 @@ namespace Energy.UI.Model
                     break;
 
                 case ParticipantType.Station:
-                    Stations.Add(new StationModel(name, FeaturesNames));
+                    Stations.Add(new StationModel(name, FeaturesNames, ColorGenerator.GetNext()));
                     break;
 
                 default:
@@ -140,6 +141,23 @@ namespace Energy.UI.Model
                 Binding = new Binding { Path = new PropertyPath(featureName) },
                 IsReadOnly = Constants.ConstantFeatures.Contains(featureName)
             };
+        }
+
+        public void SetResult(int[][] result)
+        {
+            foreach (var consumer in Consumers)
+            {
+                consumer.Zones.Clear();
+            }
+
+            for (var i = 0; i < result.Length; i++)
+            {
+                var station = Stations[i];
+                foreach (var consumerIndex in result[i])
+                {
+                    Consumers[consumerIndex].Zones.Add(station);
+                }
+            }
         }
     }
 }

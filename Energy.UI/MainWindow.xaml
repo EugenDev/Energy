@@ -62,7 +62,7 @@
             </MenuItem>
         </Menu>
 
-        <TabControl Grid.Row="1">
+        <TabControl Name="MainTabControl"  Grid.Row="1">
             <TabItem Header="Визуализация">
                 <ScrollViewer Name="ScrollViewer" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" >
                         <controls:GraphControl x:Name="GraphControl" ItemsSource="{Binding Controls, Mode=OneWay}" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -85,8 +85,8 @@
                 <DataGrid x:Name="ConsumersDataGrid" ItemsSource="{Binding Consumers}" />
             </TabItem>
 
-            <TabItem Header="Результат">
-                <TextBox Name="ResultTextBox" />
+            <TabItem Name="ResultTabItem" Header="Результат">
+                <TextBox Name="ResultTextBox" TextWrapping="Wrap" />
             </TabItem>
 
         </TabControl>

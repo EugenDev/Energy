@@ -186,6 +186,8 @@ namespace Energy.UI
                     result);
                 ResultTextBox.Text = printedResult;
                 File.WriteAllText("result.txt", printedResult);
+                TaskModel.SetResult(result.Result);
+                MainTabControl.SelectedItem = ResultTabItem;
             }
             catch (Exception ex)
             {

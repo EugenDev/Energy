@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Energy.UI.Helpers;
 using Energy.UI.Model;
 
 namespace Energy.UI.Serialization
@@ -21,7 +22,7 @@ namespace Energy.UI.Serialization
             for (var i = 0; i < stationsCount; i++)
             {
                 var stationParts = lines[lineNumber++].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                var station = new StationModel(stationParts[0], result.FeaturesNames)
+                var station = new StationModel(stationParts[0], result.FeaturesNames, ColorGenerator.GetNext())
                 {
                     X = double.Parse(stationParts[1]),
                     Y = double.Parse(stationParts[2])

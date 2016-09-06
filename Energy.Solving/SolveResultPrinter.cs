@@ -19,11 +19,16 @@ namespace Energy.Solving
 
         private static void PrintZones(IList<string> stationNames, IList<string> consumersNames, int[][] zonesDescription, StringBuilder builder)
         {
-            builder.AppendLine("Распределение по зонам:");
+            builder.AppendLine("По результатам расчетов перспектив развития рассматриваемой " +
+                               "электроэнергетической системы выявлено, что для максимального обеспечения\n" +
+                               "условий и целей данной задачи и принятия наиболее рационального решения " +
+                               "рекомендуется следующее распределение потребителей по зонам:").AppendLine();
+
             for (var i = 0; i < zonesDescription.Length; i++)
             {
+                builder.AppendLine($"К зоне электростанции {stationNames[i]} рекомендуется отнести:");
                 var answerRow = string.Join(", ", zonesDescription[i].Select(e => consumersNames[e]));
-                builder.AppendFormat("{0}: {1}", stationNames[i], answerRow);
+                builder.AppendLine($"\t{answerRow}");
                 builder.AppendLine();
             }
         }
