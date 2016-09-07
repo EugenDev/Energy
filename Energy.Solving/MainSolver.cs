@@ -58,7 +58,7 @@ namespace Energy.Solving
 	    {
 	        var p = T.GetLength(1);
 	        var n = T.GetLength(0);
-	        var columns = p * (p - 1)/2;
+	        var columns = Math.Max(p * (p - 1)/2, 1);
 	        var result = new double[T.GetLength(0), columns];
 
 	        for (var k = 0; k < n; k++)
