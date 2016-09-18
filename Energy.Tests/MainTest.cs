@@ -6,8 +6,6 @@ namespace Energy.Tests
 	[TestFixture]
     public class MainTest
     {
-		private const double Tolerance = 0.001;
-
 		[Test, Ignore("Нахер")]
 		public void TestGetT1()
 		{
@@ -35,11 +33,11 @@ namespace Energy.Tests
 				{0.483, 0.516 ,0.483, 0.400}
 			};
 
-			Assert.That(MainSolver.GetT(inputR, inputS), Is.EqualTo(output).Within(Tolerance));
+			Assert.That(MainSolver.GetT(inputR, inputS), Is.EqualTo(output).Within(SolverTestConstants.Tolerance));
 		}
-
+        
         [Test]
-        public void TestGetT2()
+        public void TestMoreConsumers()
         {
             var inputR = new[,]
             {
@@ -81,7 +79,7 @@ namespace Energy.Tests
                 {0.600, 0.500, 0.500, 0.500}
             };
 
-            Assert.That(MainSolver.GetT(inputR, inputS), Is.EqualTo(output).Within(Tolerance));
+            Assert.That(MainSolver.GetT(inputR, inputS), Is.EqualTo(output).Within(SolverTestConstants.Tolerance));
         }
 
         [Test]
@@ -119,7 +117,7 @@ namespace Energy.Tests
                 {0.500, 0.500, 0.500, 0.500, 0.500, 0.500}
             };
 
-            Assert.That(MainSolver.GetW(inputT), Is.EqualTo(expectedOutput).Within(Tolerance));
+            Assert.That(MainSolver.GetW(inputT), Is.EqualTo(expectedOutput).Within(SolverTestConstants.Tolerance));
         }
 
         [Test]
@@ -141,7 +139,7 @@ namespace Energy.Tests
                 {0.500, 0.500, 0.500, 0.500, 0.500, 0.500}
             };
 
-            Assert.That(MainSolver.GetTreshold(input), Is.EqualTo(0.527).Within(Tolerance));
+            Assert.That(MainSolver.GetTreshold(input), Is.EqualTo(0.527).Within(SolverTestConstants.Tolerance));
         }
 
 	    [Test]

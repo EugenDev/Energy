@@ -30,18 +30,19 @@ namespace Energy.Solving
 			{
 				throw new InvalidOperationException("Некорректные размеры входных матриц");
 			}
-			var n = R.GetLength(0);
-			var p = S.GetLength(1);
+			var consumersCount = R.GetLength(0);
+			var stationsCount = S.GetLength(1);
+            var featuresCount = R.GetLength(1);
 
-			var result = new double[n, p];
+			var result = new double[consumersCount, stationsCount];
 
-		    for (var xIndex = 0; xIndex < n; xIndex++)
+		    for (var xIndex = 0; xIndex < consumersCount; xIndex++)
 			{
-				for (var zIndex = 0; zIndex < p; zIndex++)
+				for (var zIndex = 0; zIndex < stationsCount; zIndex++)
 				{
 					var nominator = 0.0;
 					var denominator = 0.0;
-				    for(var yIndex = 0; yIndex < p; yIndex++)
+				    for(var yIndex = 0; yIndex < featuresCount; yIndex++)
 					{
 						nominator += R[xIndex, yIndex] * S[yIndex, zIndex];
 						denominator += R[xIndex, yIndex];

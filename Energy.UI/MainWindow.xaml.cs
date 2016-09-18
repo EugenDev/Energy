@@ -49,7 +49,7 @@ namespace Energy.UI
 
             CanvasScale = 100;
 
-            if (App.IsDebug)
+            if (Properties.Settings.Default.DebugMode)
                 CreateTestMenu();
         }
 
@@ -88,7 +88,7 @@ namespace Energy.UI
         private void GraphControlWantAddLink(object sender, LinkAddedEventArgs e)
         {
             var link = new LinkModel(e.From, e.To);
-            if (App.IsDebug)
+            if (Properties.Settings.Default.DebugMode)
             {
                 var r = new Random(DateTime.Now.Millisecond);
                 link.Distance = r.Next(5, 20);
@@ -201,7 +201,7 @@ namespace Energy.UI
             try
             {
                 string name;
-                if (App.IsDebug)
+                if (Properties.Settings.Default.AutoGenerateParticipantNames)
                 {
                     name = "Station_" + _stationsCounter++;
                 }
@@ -225,7 +225,7 @@ namespace Energy.UI
             try
             {
                 string name;
-                if (App.IsDebug)
+                if (Properties.Settings.Default.AutoGenerateParticipantNames)
                 {
                     name = "Consumer_" + _consumersCounter++;
                 }
@@ -249,7 +249,7 @@ namespace Energy.UI
             try
             {
                 string name;
-                if (App.IsDebug)
+                if (Properties.Settings.Default.AutoGenerateParticipantNames)
                 {
                     name = "Feature_" + _featuresCounter++;
                 }
