@@ -23,6 +23,8 @@ namespace Energy.UI.Model
         
         public bool NeedDistanceRecalculation { get; set; }
 
+        public List<List<ModelBase>> Type { get; set; }
+
         public TaskModel()
         {
             FeaturesNames = new ObservableCollection<string> (Constants.ConstantFeatures);
@@ -143,19 +145,19 @@ namespace Energy.UI.Model
             };
         }
 
-        public void SetResult(int[][] result)
+        public void SetResult(Dictionary<string, List<string>> result)
         {
             foreach (var consumer in Consumers)
             {
                 consumer.Zones.Clear();
             }
 
-            for (var i = 0; i < result.Length; i++)
+            foreach (var pair in result)
             {
-                var station = Stations[i];
-                foreach (var consumerIndex in result[i])
+                var station = Stations.First(s => s.Name.Equals(pair.Key));
+                foreach (var consumer in Consumers.Where(c => pair.Value.Contains(c.Name)))
                 {
-                    Consumers[consumerIndex].Zones.Add(station);
+                    consumer.Zones.Add(station);
                 }
             }
         }

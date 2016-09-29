@@ -1,10 +1,13 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using System.Linq;
+using Energy.Solving;
+using Energy.Solving.PathFinding;
 using Energy.UI.Model;
 
 namespace Energy.UI.Serialization
 {
-    public class TaskModelExporter
+    public static class TaskModelExporter
     {
         public static string ToText(TaskModel taskModel)
         {
@@ -69,6 +72,83 @@ namespace Energy.UI.Serialization
                 column++;
             }
 
+            return result;
+        }
+
+
+        public static double[,] GetRMatrix(List<ConsumerModel> consumers, List<string> features)
+        {
+            var rowsCount = consumers.Count;
+            var columnsCount = features.Count;
+            var result = new double[rowsCount, columnsCount];
+
+            var row = 0;
+            foreach (var consumer in consumers)
+            {
+                var column = 0;
+                foreach (var columnsName in features)
+                {
+                    result[row, column++] = consumer[columnsName];
+                }
+                row++;
+            }
+
+            return result;
+        }
+
+        public static double[,] GetSMatrix(List<StationModel> stations, List<string> features)
+        {
+            var columnsCount = stations.Count;
+            var rowsCount = features.Count;
+            var result = new double[rowsCount, columnsCount];
+
+            var column = 0;
+            foreach (var station in stations)
+            {
+                var row = 0;
+                foreach (var columnsName in features)
+                {
+                    result[row++, column] = station[columnsName];
+                }
+                column++;
+            }
+
+            return result;
+        }
+
+        public static Graph GetGraph(TaskModel taskModel)
+        {
+            var result = new Graph();
+
+            foreach (var station in taskModel.Stations)
+                result.AddNode(station.Name);
+
+            foreach (var consumer in taskModel.Consumers)
+                result.AddNode(consumer.Name);
+
+            foreach (var link in taskModel.Links)
+                result.LinkNode(link.From.Name, link.To.Name, link.Distance, link.Conduction);
+
+            return result;
+        }
+
+        public static Task GetTask(TaskModel taskModel)
+        {
+            var graph = GetGraph(taskModel);
+            var components = graph.GetComponents();
+
+
+            var result = new Task();
+            foreach (var component in components)
+            {
+                var stations = taskModel.Stations.Where(i => component.Contains(i.Name)).ToList();
+                var consumers = taskModel.Consumers.Where(i => component.Contains(i.Name)).ToList();
+
+                var s = GetSMatrix(stations, taskModel.FeaturesNames.ToList());
+                var r = GetRMatrix(consumers, taskModel.FeaturesNames.ToList());
+
+                result.SimpleTasks.Add(new SimpleTask(stations.Select(x => x.Name).ToList(), consumers.Select(x => x.Name).ToList(), r, s));
+            }
             return result;
         }
     }

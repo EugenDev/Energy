@@ -12,6 +12,7 @@ using Energy.UI.Serialization;
 using Energy.UI.Windows;
 using Microsoft.Win32;
 using DataGrid = System.Windows.Controls.DataGrid;
+using Task = System.Threading.Tasks.Task;
 
 namespace Energy.UI
 {
@@ -176,17 +177,16 @@ namespace Energy.UI
                 if (!TaskModel.IsValid)
                     throw new InvalidOperationException("Отсутствуют станции или потребители");
                 
-                var rMatrix = TaskModelExporter.GetRMatrix(TaskModel);
-                var sMatrix = TaskModelExporter.GetSMatrix(TaskModel);
-
-                var result = MainSolver.Solve(rMatrix, sMatrix);
+                var task = TaskModelExporter.GetTask(TaskModel);
+                var result = MainSolver.Solve(task);
+                
                 var printedResult = SolveResultPrinter.PrintTaskSolveResult(
                     TaskModel.Stations.Select(s => s.Name).ToList(), 
                     TaskModel.Consumers.Select(c => c.Name).ToList(), 
                     result);
                 ResultTextBox.Text = printedResult;
                 File.WriteAllText("result.txt", printedResult);
-                TaskModel.SetResult(result.Result);
+                TaskModel.SetResult(result.GetCombinedResult());
                 MessageBox.Show("Задача решена", "");
             }
             catch (Exception ex)
@@ -282,6 +282,7 @@ namespace Energy.UI
 
         private void TestMenuItem1_OnClick(object sender, RoutedEventArgs e)
         {
+            var a = TaskModelExporter.GetTask(TaskModel);
         }
 
         private void TestMenuItem2_OnClick(object sender, RoutedEventArgs e)
@@ -331,5 +332,4 @@ namespace Energy.UI
 }
 
 //TODO: Попробовать сделать GraphControl составным, чтобы можно было биндиться к некомпозитной коллекции
-//TODO: Несвязный граф!!!!
 //TODO: Кеширование контролов для исключения перерисовки

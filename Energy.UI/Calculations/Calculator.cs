@@ -33,23 +33,23 @@ namespace Energy.UI.Calculations
                 var conductions = graph.GetConductions(item.Name);
 
                 var maxDistance = distances
-                    .Where(n => toCollection.Any(c => c.Name.Equals(n.Key)))
+                    .Where(n => n.Value.HasValue && toCollection.Any(c => c.Name.Equals(n.Key)))
                     .Max(n => n.Value);
 
                 var maxConduction = conductions
-                    .Where(n => toCollection.Any(c => c.Name.Equals(n.Key)))
+                    .Where(n => n.Value.HasValue && toCollection.Any(c => c.Name.Equals(n.Key)))
                     .Max(n => n.Value);
 
                 var minConduction = conductions
-                    .Where(n => toCollection.Any(c => c.Name.Equals(n.Key)))
+                    .Where(n => n.Value.HasValue && toCollection.Any(c => c.Name.Equals(n.Key)))
                     .Min(n => n.Value);
 
                 var minDistance = distances
-                    .Where(n => toCollection.Any(c => c.Name.Equals(n.Key)))
+                    .Where(n => n.Value.HasValue && toCollection.Any(c => c.Name.Equals(n.Key)))
                     .Min(n => n.Value);
 
-                item["Расстояние"] = minDistance / maxDistance;
-                item["Проводимость"] = (double)minConduction / maxConduction;
+                item["Расстояние"] = minDistance.Value / maxDistance.Value;
+                item["Проводимость"] = (double)minConduction.Value / maxConduction.Value;
             }
         }
     }

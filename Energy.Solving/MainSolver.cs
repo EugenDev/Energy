@@ -14,15 +14,33 @@ namespace Energy.Solving
 	        return GetZones(matrixT, treshold);
 	    }
 
-	    public static TaskSolveResult Solve(double[,] matrixR, double[,] matrixS)
+	    public static SimpleTaskSolveResult Solve(SimpleTask task)
 	    {
-	        var result = new TaskSolveResult { MatrixR = matrixR, MatrixS = matrixS };
+	        var result = new SimpleTaskSolveResult { MatrixR = task.MatrixR, MatrixS = task.MatrixS };
 	        result.MatrixT = GetT(result.MatrixR, result.MatrixS);
 	        result.MatrixW = GetW(result.MatrixT);
             result.Treshold= GetTreshold(result.MatrixW);
-            result.Result = GetZones(result.MatrixT, result.Treshold);
+            var zones = GetZones(result.MatrixT, result.Treshold);
+	        for(int z = 0; z < zones.Length; z++)
+	        {
+	            var list = new List<string>();
+	            foreach (var c in zones[z])
+	            {
+	                list.Add(task.ConsumersList[c]);
+	            }
+	            result.Result[task.StationsList[z]] = list;
+	        }
             return result;
 	    }
+
+	    public static TaskSolveResult Solve(Task task)
+	    {
+	        var result = new TaskSolveResult();
+
+            result.SimpleTaskSolveResults.AddRange(task.SimpleTasks.Select(Solve));
+
+	        return result;
+        }
 
         public static double [,] GetT(double [,] R, double [,] S)
 		{

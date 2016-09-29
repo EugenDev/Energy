@@ -42,7 +42,7 @@ namespace Energy.Solving.PathFinding
         }
 
 
-        public Dictionary<string, double> GetShortestDistances(string from)
+        public Dictionary<string, double?> GetShortestDistances(string from)
         {
             ClearVisitedNodes();
             var fromNode = _nodes[from];
@@ -69,7 +69,7 @@ namespace Energy.Solving.PathFinding
             return _nodes.ToDictionary(n => n.Key, n => n.Value.Distance);
         }
 
-        public Dictionary<string, int> GetConductions(string from)
+        public Dictionary<string, int?> GetConductions(string from)
         {
             ClearVisitedNodes();
             var fromNode = _nodes[from];
@@ -87,9 +87,9 @@ namespace Energy.Solving.PathFinding
                 {
                     var otherNodeName = edge.From.Name.Equals(currentNode.Name) ? edge.To.Name : edge.From.Name;
                     var node = _nodes[otherNodeName];
-                    if (Math.Min(currentNode.Conduction, edge.Conduction) <= node.Conduction)
+                    if (Math.Min(currentNode.Conduction.Value, edge.Conduction) <= node.Conduction)
                         continue;
-                    node.Conduction = Math.Min(currentNode.Conduction, edge.Conduction);
+                    node.Conduction = Math.Min(currentNode.Conduction.Value, edge.Conduction);
                     queue.Enqueue(node);
                 }
             }
@@ -101,9 +101,54 @@ namespace Energy.Solving.PathFinding
         {
             foreach (var pair in _nodes)
             {
-                pair.Value.Distance = double.MaxValue;
-                pair.Value.Conduction = 0;
+                pair.Value.Distance = null;
+                pair.Value.Conduction = null;
+                pair.Value.Component = null;
             }
+        }
+
+        public List<List<string>> GetComponents()
+        {
+            ClearVisitedNodes();
+            var queue = new Queue<Node>();
+            var nodes = _nodes.Select(x => x.Value).ToArray();
+
+            if (nodes.Length == 0)
+                throw new InvalidOperationException("В графе нет узлов");
+
+            var component = 0;
+            foreach (var node in nodes)
+            {
+                if(node.Component != null)
+                    continue;
+
+                if (!_adjasentEdges.ContainsKey(node.Name))
+                    continue;
+
+                queue.Clear();
+
+                node.Component = component;
+                queue.Enqueue(node);
+
+                while (queue.Count != 0)
+                {
+                    var currentNode = queue.Dequeue();
+                    var adjEdges = _adjasentEdges[currentNode.Name];
+                    foreach (var edge in adjEdges)
+                    {
+                        var otherNodeName = edge.From.Name.Equals(currentNode.Name) ? edge.To.Name : edge.From.Name;
+                        var otherNode = _nodes[otherNodeName];
+                        if(otherNode.Component != null)
+                            continue;
+                        otherNode.Component = component;
+                        queue.Enqueue(otherNode);
+                    }
+                }
+
+                component++;
+            }
+            
+            return _nodes.GroupBy(n => n.Value.Component, n => n.Key).Select(x => x.ToList()).ToList();
         }
     }
 }
