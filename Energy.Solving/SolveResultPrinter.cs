@@ -53,6 +53,8 @@ namespace Energy.Solving
             builder.AppendLine();
             PrintMatrix("W", result.MatrixW, builder);
             builder.AppendLine();
+            builder.AppendLine($"Порог различения {result.Treshold}");
+            builder.AppendLine();
             PrintZones(stationNames, consumersNames, result.Result, builder);
         }
     }

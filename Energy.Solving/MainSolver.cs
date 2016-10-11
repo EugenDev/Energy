@@ -120,7 +120,7 @@ namespace Energy.Solving
 	            }
 	        }
 
-	        return tresholdValue;
+	        return tresholdValue != double.MinValue ? tresholdValue : upperTreshold;
 	    }
 
 	    public static int[][] GetZones(double[,] input, double treshold)

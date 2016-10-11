@@ -7,7 +7,7 @@ namespace Energy.UI.Model
     public class LinkModel : INotifyPropertyChanged
     {
         private double _distance;
-        private int _conduction;
+        private double _conduction;
 
         public double Distance
         {
@@ -15,7 +15,7 @@ namespace Energy.UI.Model
             set { _distance = value; OnPropertyChanged(); }
         }
 
-        public int Conduction
+        public double Conduction
         {
             get { return _conduction; }
             set { _conduction = value; OnPropertyChanged(); }

@@ -5,7 +5,7 @@
         public Node From { get; }
         public Node To { get; }
         public double Distance { get; set; }
-        public int Conduction { get; set; }
+        public double Conduction { get; set; }
 
         public Edge(Node from, Node to)
         {

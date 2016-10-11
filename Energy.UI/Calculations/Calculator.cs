@@ -21,7 +21,7 @@ namespace Energy.UI.Calculations
                 graph.LinkNode(link.From.Name, link.To.Name, link.Distance, link.Conduction);
 
             RecalculateCollection(graph, taskModel.Stations, taskModel.Consumers);
-            RecalculateCollection(graph, taskModel.Consumers, taskModel.Stations);
+            //RecalculateCollection(graph, taskModel.Consumers, taskModel.Stations);
         }
 
         private void RecalculateCollection<TFrom, TTo>(Graph graph, ObservableCollection<TFrom> fromCollection,
@@ -30,26 +30,26 @@ namespace Energy.UI.Calculations
             foreach (var item in fromCollection)
             {
                 var distances = graph.GetShortestDistances(item.Name);
-                var conductions = graph.GetConductions(item.Name);
+                //var conductions = graph.GetConductions(item.Name);
 
                 var maxDistance = distances
                     .Where(n => n.Value.HasValue && toCollection.Any(c => c.Name.Equals(n.Key)))
                     .Max(n => n.Value);
 
-                var maxConduction = conductions
-                    .Where(n => n.Value.HasValue && toCollection.Any(c => c.Name.Equals(n.Key)))
-                    .Max(n => n.Value);
+                //var maxConduction = conductions
+                //    .Where(n => n.Value.HasValue && toCollection.Any(c => c.Name.Equals(n.Key)))
+                //    .Max(n => n.Value);
 
-                var minConduction = conductions
-                    .Where(n => n.Value.HasValue && toCollection.Any(c => c.Name.Equals(n.Key)))
-                    .Min(n => n.Value);
+                //var minConduction = conductions
+                //    .Where(n => n.Value.HasValue && toCollection.Any(c => c.Name.Equals(n.Key)))
+                //    .Min(n => n.Value);
 
                 var minDistance = distances
                     .Where(n => n.Value.HasValue && toCollection.Any(c => c.Name.Equals(n.Key)))
                     .Min(n => n.Value);
 
-                item["Расстояние"] = minDistance.Value / maxDistance.Value;
-                item["Проводимость"] = (double)minConduction.Value / maxConduction.Value;
+                item["Расстояние"] = 1 - minDistance.Value / maxDistance.Value;
+                //item["Проводимость"] = 1 - (double)minConduction.Value / maxConduction.Value;
             }
         }
     }

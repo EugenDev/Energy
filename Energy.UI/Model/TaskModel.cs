@@ -140,8 +140,8 @@ namespace Energy.UI.Model
             return new DataGridTextColumn
             {
                 Header = featureName,
-                Binding = new Binding { Path = new PropertyPath(featureName) },
-                IsReadOnly = Constants.ConstantFeatures.Contains(featureName)
+                Binding = new Binding { Path = new PropertyPath(featureName) }
+                //IsReadOnly = Constants.ConstantFeatures.Contains(featureName)
             };
         }
 

@@ -22,7 +22,7 @@ namespace Energy.Solving.PathFinding
             _nodes.Add(name, new Node(name));
         }
 
-        public void LinkNode(string fromName, string toName, double distance, int conduction)
+        public void LinkNode(string fromName, string toName, double distance, double conduction)
         {
             var edge = new Edge(_nodes[fromName], _nodes[toName])
             {
@@ -69,7 +69,7 @@ namespace Energy.Solving.PathFinding
             return _nodes.ToDictionary(n => n.Key, n => n.Value.Distance);
         }
 
-        public Dictionary<string, int?> GetConductions(string from)
+        public Dictionary<string, double?> GetConductions(string from)
         {
             ClearVisitedNodes();
             var fromNode = _nodes[from];

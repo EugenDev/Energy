@@ -2,7 +2,7 @@
 {
     public static class Constants
     {
-        public static readonly string[] ConstantFeatures = {"Расстояние", "Проводимость"};
+        public static readonly string[] ConstantFeatures = {"Расстояние"/*, "Проводимость"*/};
 
     }
 }

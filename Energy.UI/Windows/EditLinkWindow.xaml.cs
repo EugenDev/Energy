@@ -16,15 +16,16 @@ namespace Energy.UI.Windows
             _link = link;
             Title = isNewLink ? "Новая связь" : "Параметры связи";
             DistanceTextBox.Text = _link.Distance.ToString();
-            ConductionComboBox.SelectedIndex = isNewLink ? 0 : link.Conduction - 1;
+            ConductionTextBox.Text = _link.Conduction.ToString();
         }
 
         private void SaveButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var distance = 0.0;
-            if(double.TryParse(DistanceTextBox.Text, out distance))
-                _link.Distance = distance;
-            _link.Conduction = ConductionComboBox.SelectedIndex + 1;
+            var tmp = 0.0;
+            if(double.TryParse(DistanceTextBox.Text, out tmp))
+                _link.Distance = tmp;
+            if (double.TryParse(ConductionTextBox.Text, out tmp))
+                _link.Conduction = tmp;
             DialogResult = true;
         }
 
