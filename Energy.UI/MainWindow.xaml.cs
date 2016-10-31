@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Energy.Solving;
-using Energy.UI.Calculations;
 using Energy.UI.Controls;
 using Energy.UI.Model;
 using Energy.UI.Serialization;
@@ -105,14 +104,14 @@ namespace Energy.UI
         
         private void RefreshColumns()
         {
-            RefreshColumns(StationsDataGrid);
+            RefreshColumns(StationsDataGrid, forStation: true);
             RefreshColumns(ConsumersDataGrid);
         }
 
-        private void RefreshColumns(DataGrid dataGrid)
+        private void RefreshColumns(DataGrid dataGrid, bool forStation = false)
         {
             dataGrid.Columns.Clear();
-            var columns = TaskModel.GetColumns();
+            var columns = TaskModel.GetColumns(forStation);
             foreach (var column in columns)
             {
                 dataGrid.Columns.Add(column);
@@ -172,7 +171,7 @@ namespace Energy.UI
         {
             try
             {
-                RecalculateDistancesItem_OnClick(null, null);
+                var combineType = (CombineType)Enum.Parse(typeof(CombineType), Properties.Settings.Default.CombinationType);
 
                 if (!TaskModel.IsValid)
                     throw new InvalidOperationException("Отсутствуют станции или потребители");
@@ -180,13 +179,17 @@ namespace Energy.UI
                 var task = TaskModelExporter.GetTask(TaskModel);
                 var result = MainSolver.Solve(task);
                 
-                var printedResult = SolveResultPrinter.PrintTaskSolveResult(
-                    TaskModel.Stations.Select(s => s.Name).ToList(), 
-                    TaskModel.Consumers.Select(c => c.Name).ToList(), 
-                    result);
-                ResultTextBox.Text = printedResult;
-                File.WriteAllText("result.txt", printedResult);
-                TaskModel.SetResult(result.GetCombinedResult());
+                ResultTextBox.Text = SolveResultPrinter.PrintTaskSolveResult(
+                    TaskModel.Stations.Select(s => s.Name).ToList(),
+                    TaskModel.Consumers.Select(c => c.Name).ToList(),
+                    result, combineType, fullPrint: false);
+
+                File.WriteAllText("result.txt", SolveResultPrinter.PrintTaskSolveResult(
+                    TaskModel.Stations.Select(s => s.Name).ToList(),
+                    TaskModel.Consumers.Select(c => c.Name).ToList(),
+                    result, combineType));
+
+                TaskModel.SetResult(result.GetCombinedResult(combineType));
                 MessageBox.Show("Задача решена", "");
             }
             catch (Exception ex)
@@ -289,14 +292,7 @@ namespace Energy.UI
         {
             var res = Validation.GetHasError(StationsDataGrid);
         }
-
-        private void RecalculateDistancesItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            var calc = new Calculator();
-            calc.ReCalculateDistances(TaskModel);
-            RefreshColumns();
-        }
-
+        
         private void RemoveStation_OnClick(object sender, RoutedEventArgs e)
         {
             var choosedItem = ChooseItemWindow.ShowChooseDialog(TaskModel.Stations.Select(c => c.Name).ToList(), this);

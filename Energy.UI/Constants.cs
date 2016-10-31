@@ -2,7 +2,9 @@
 {
     public static class Constants
     {
-        public static readonly string[] ConstantFeatures = {"Расстояние"/*, "Проводимость"*/};
+        public const string DistanceFeatureName = "Расстояние";
+        public const string ConductionFeatureName = "Проводимость";
 
+        public static readonly string[] ConstantFeatures = {DistanceFeatureName, ConductionFeatureName};
     }
 }

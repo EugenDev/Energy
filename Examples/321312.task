@@ -1,0 +1,9 @@
+
+1
+Station_0;81;134;
+2
+Consumer_0;355;13;1
+Consumer_1;357;254;2
+2
+Station_0;Consumer_0;12;1
+Station_0;Consumer_1;5;3

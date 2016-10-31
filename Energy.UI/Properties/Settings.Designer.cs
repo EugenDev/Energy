@@ -40,5 +40,14 @@ namespace Energy.UI.Properties {
                 return ((bool)(this["DebugMode"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Intersection")]
+        public string CombinationType {
+            get {
+                return ((string)(this["CombinationType"]));
+            }
+        }
     }
 }

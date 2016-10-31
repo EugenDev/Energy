@@ -8,5 +8,8 @@
     <Setting Name="DebugMode" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="CombinationType" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Intersection</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -46,7 +46,7 @@ namespace Energy.UI.Serialization
                 };
                 for (var fn = 0; fn < consumerParts.Length - 3; fn++)
                 {
-                    consumer[featuresNames[fn]] = double.Parse(consumerParts[fn + 3]);
+                    consumer[result.FeaturesNames[fn]] = double.Parse(consumerParts[fn + 3]);
                 }
                 result.Consumers.Add(consumer);
                 map.Add(consumer.Name, consumer);

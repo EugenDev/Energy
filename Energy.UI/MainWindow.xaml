@@ -47,7 +47,6 @@
                 <MenuItem Name="NewTaskMenuItem" Header="Новая" Click="NewTaskMenuItem_OnClick"/>
                 <MenuItem Name="LoadTaskMenuItem" Header="Загрузить" Click="LoadTaskMenuItem_OnClick"/>
                 <MenuItem Name="SaveTaskMenuItem" Header="Сохранить" Click="SaveTaskMenuItem_OnClick"/>
-                <MenuItem Name="RecalculateDistancesItem" Header="Персчитать расстояния" Click="RecalculateDistancesItem_OnClick" />
                 <MenuItem Name="SolveTaskMenuItem" Header="Решить" Click="SolveTaskMenuItem_OnClick" />
             </MenuItem>
             <MenuItem Header="Добавить">

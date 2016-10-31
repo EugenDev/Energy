@@ -12,22 +12,12 @@ namespace Energy.Solving
             SimpleTaskSolveResults = new List<SimpleTaskSolveResult>();
         }
 
-        public Dictionary<string, List<string>> GetCombinedResult()
+        public Dictionary<string, List<string>> GetCombinedResult(CombineType combineType)
         {
-            var result = new Dictionary<string, List<string>>();
-
-            foreach (var solveResult in SimpleTaskSolveResults)
-            {
-                foreach (var pair in solveResult.Result)
-                {
-                    result.Add(pair.Key, pair.Value);
-                }
-            }
-
-            return result;
+            return SolveResultCombiner.CombineSolveResults(this, combineType);
         }
     }
-
+    
     public class SimpleTaskSolveResult
     {
         public double[,] MatrixR { get; set; }
@@ -40,11 +30,15 @@ namespace Energy.Solving
 
         public double Treshold { get; set; }
 
-        public Dictionary<string, List<string>> Result { get; set; }
+        public Dictionary<string, List<string>> CommonResult { get; set; }
+        public Dictionary<string, List<string>> DistanceResult { get; set; }
+        public Dictionary<string, List<string>> ConductionResult { get; set; }
 
         public SimpleTaskSolveResult()
         {
-            Result = new Dictionary<string, List<string>>();
+            CommonResult = new Dictionary<string, List<string>>();
+            DistanceResult = new Dictionary<string, List<string>>();
+            ConductionResult = new Dictionary<string, List<string>>();
         }
     }
 }

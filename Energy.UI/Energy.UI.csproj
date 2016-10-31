@@ -60,7 +60,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Calculations\Calculator.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controls\GeometryHelper.cs" />
     <Compile Include="Controls\GraphControl.xaml.cs">

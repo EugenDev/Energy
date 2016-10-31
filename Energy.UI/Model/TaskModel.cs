@@ -128,9 +128,13 @@ namespace Energy.UI.Model
             Links.Remove(linkModel);
         }
 
-        public DataGridTextColumn[] GetColumns()
+        public DataGridTextColumn[] GetColumns(bool forStation)
         {
-            return FeaturesNames
+            IEnumerable<string> source = FeaturesNames;
+            if (forStation)
+                source = source.Where(f => !Constants.ConstantFeatures.Contains(f));
+
+            return source
                 .Select(CreateFeatureColumn)
                 .ToArray();
         }

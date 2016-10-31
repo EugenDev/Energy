@@ -77,7 +77,7 @@ namespace Energy.Solving.PathFinding
             var queue = new Queue<Node>();
             queue.Enqueue(fromNode);
             fromNode.Distance = 0;
-            fromNode.Conduction = 3;
+            fromNode.Conduction = double.MaxValue;
 
             while (queue.Count != 0)
             {

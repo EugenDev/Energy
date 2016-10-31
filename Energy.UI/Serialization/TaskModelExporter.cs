@@ -23,7 +23,7 @@ namespace Energy.UI.Serialization
             builder.AppendLine(taskModel.Consumers.Count.ToString());
             foreach (var consumer in taskModel.Consumers)
             {
-                var featuresValues = string.Join(";", consumer.Where(f => !Constants.ConstantFeatures.Contains(f.Key)).Select(f => consumer[f.Key]));
+                var featuresValues = string.Join(";", consumer.Select(f => consumer[f.Key]));
                 builder.AppendLine($"{consumer.Name};{consumer.X};{consumer.Y};{featuresValues}");
             }
             builder.AppendLine(taskModel.Links.Count.ToString());
@@ -132,6 +132,27 @@ namespace Energy.UI.Serialization
             return result;
         }
 
+        public static Graph GetGraph(TaskModel taskModel, List<string> componentList)
+        {
+            var component = new HashSet<string>();
+            foreach (var item in componentList)
+                component.Add(item);
+
+            var result = new Graph();
+
+            foreach (var station in taskModel.Stations.Where(s => component.Contains(s.Name)))
+                result.AddNode(station.Name);
+
+            foreach (var consumer in taskModel.Consumers.Where(s => component.Contains(s.Name)))
+                result.AddNode(consumer.Name);
+
+            foreach (var link in taskModel.Links)
+                if(component.Contains(link.From.Name))
+                    result.LinkNode(link.From.Name, link.To.Name, link.Distance, link.Conduction);
+
+            return result;
+        }
+
         public static Task GetTask(TaskModel taskModel)
         {
             var graph = GetGraph(taskModel);
@@ -144,10 +165,18 @@ namespace Energy.UI.Serialization
                 var stations = taskModel.Stations.Where(i => component.Contains(i.Name)).ToList();
                 var consumers = taskModel.Consumers.Where(i => component.Contains(i.Name)).ToList();
 
-                var s = GetSMatrix(stations, taskModel.FeaturesNames.ToList());
-                var r = GetRMatrix(consumers, taskModel.FeaturesNames.ToList());
+                var s = GetSMatrix(stations, taskModel.FeaturesNames.Except(Constants.ConstantFeatures).ToList());
+                var r = GetRMatrix(consumers, taskModel.FeaturesNames.Except(Constants.ConstantFeatures).ToList());
 
-                result.SimpleTasks.Add(new SimpleTask(stations.Select(x => x.Name).ToList(), consumers.Select(x => x.Name).ToList(), r, s));
+                var simpleTask = new SimpleTask(stations.Select(x => x.Name).ToList(),
+                    consumers.Select(x => x.Name).ToList(), r, s);
+
+                simpleTask.ConsumersDistanceDemand = consumers.ToDictionary(i => i.Name, i => i[Constants.DistanceFeatureName]);
+                simpleTask.ConsumersConductionDemand = consumers.ToDictionary(i => i.Name, i => i[Constants.ConductionFeatureName]);
+
+                simpleTask.Graph = GetGraph(taskModel, component);
+
+                result.SimpleTasks.Add(simpleTask);
             }
             return result;
         }

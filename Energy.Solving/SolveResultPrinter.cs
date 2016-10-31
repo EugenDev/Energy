@@ -15,47 +15,58 @@ namespace Energy.Solving
                 builder.AppendLine();
             }
         }
-
-        private static void PrintZones(IList<string> stationNames, IList<string> consumersNames, Dictionary<string, List<string>> zonesDescription, StringBuilder builder)
+        
+        private static void PrintGraphResult(StringBuilder builder, Dictionary<string, List<string>> result)
         {
-            builder.AppendLine("По результатам расчетов перспектив развития рассматриваемой " +
-                               "электроэнергетической системы выявлено, что для максимального обеспечения\n" +
-                               "условий и целей данной задачи и принятия наиболее рационального решения " +
-                               "рекомендуется следующее распределение потребителей по зонам:").AppendLine();
-
-            foreach (var zone in zonesDescription)
+            foreach (var name in result)
             {
-                builder.AppendLine($"К зоне электростанции {zone.Key} рекомендуется отнести:");
-                var answerRow = string.Join(", ", zone.Value);
+                builder.AppendLine($"К зоне электростанции {name.Key} рекомендуется отнести:");
+                var answerRow = string.Join(", ", name.Value);
                 builder.AppendLine($"\t{answerRow}");
-                builder.AppendLine();
             }
         }
 
         public static string PrintTaskSolveResult(IList<string> stationNames, IList<string> consumersNames,
-            TaskSolveResult result)
+            TaskSolveResult result, CombineType combineType, bool fullPrint = true)
         {
             var resultBuilder = new StringBuilder();
+            var zoneNumber = 1;
             foreach (var solveResult in result.SimpleTaskSolveResults)
             {
-                PrintSimpleTaskSolveResult(stationNames, consumersNames, solveResult, resultBuilder);
+                PrintSimpleTaskSolveResult(stationNames, consumersNames, solveResult, resultBuilder, zoneNumber++, fullPrint);
+                resultBuilder.AppendLine("\n");
             }
+            
+            resultBuilder.AppendLine("По результатам расчетов перспектив развития рассматриваемой " +
+                               "электроэнергетической системы выявлено, что для максимального обеспечения\n" +
+                               "условий и целей данной задачи и принятия наиболее рационального решения " +
+                               "рекомендуется следующее распределение потребителей по зонам:");
+            PrintGraphResult(resultBuilder, SolveResultCombiner.CombineSolveResults(result, combineType));
             return resultBuilder.ToString();
         }
 
-        private static void PrintSimpleTaskSolveResult(IList<string> stationNames, IList<string> consumersNames, SimpleTaskSolveResult result, StringBuilder builder)
+        private static void PrintSimpleTaskSolveResult(IList<string> stationNames, IList<string> consumersNames, SimpleTaskSolveResult result, StringBuilder builder, int zoneNumber, bool fullPrint)
         {
-            PrintMatrix("R", result.MatrixR, builder);
-            builder.AppendLine();
-            PrintMatrix("S", result.MatrixS, builder);
-            builder.AppendLine();
-            PrintMatrix("T", result.MatrixT, builder);
-            builder.AppendLine();
-            PrintMatrix("W", result.MatrixW, builder);
-            builder.AppendLine();
-            builder.AppendLine($"Порог различения {result.Treshold}");
-            builder.AppendLine();
-            PrintZones(stationNames, consumersNames, result.Result, builder);
+            builder.AppendLine("Зона " + zoneNumber);
+            if (fullPrint)
+            {
+                PrintMatrix("R", result.MatrixR, builder);
+                builder.AppendLine();
+                PrintMatrix("S", result.MatrixS, builder);
+                builder.AppendLine();
+                PrintMatrix("T", result.MatrixT, builder);
+                builder.AppendLine();
+                PrintMatrix("W", result.MatrixW, builder);
+                builder.AppendLine();
+                builder.AppendLine($"Порог различения {result.Treshold}");
+                builder.AppendLine();
+            }
+            builder.AppendLine("Разнесение по свойствам:");
+            PrintGraphResult(builder, result.CommonResult);
+            builder.AppendLine("Разнесение по расстояниям:");
+            PrintGraphResult(builder, result.DistanceResult);
+            builder.AppendLine("Разнесение по проводимости:");
+            PrintGraphResult(builder, result.ConductionResult);
         }
     }
 }

@@ -17,19 +17,29 @@ namespace Energy.Solving
 	    public static SimpleTaskSolveResult Solve(SimpleTask task)
 	    {
 	        var result = new SimpleTaskSolveResult { MatrixR = task.MatrixR, MatrixS = task.MatrixS };
-	        result.MatrixT = GetT(result.MatrixR, result.MatrixS);
-	        result.MatrixW = GetW(result.MatrixT);
-            result.Treshold= GetTreshold(result.MatrixW);
-            var zones = GetZones(result.MatrixT, result.Treshold);
-	        for(int z = 0; z < zones.Length; z++)
+	        if (task.HasCommonFeatures)
 	        {
-	            var list = new List<string>();
-	            foreach (var c in zones[z])
+	            result.MatrixT = GetT(result.MatrixR, result.MatrixS);
+	            result.MatrixW = GetW(result.MatrixT);
+	            result.Treshold = GetTreshold(result.MatrixW);
+	            var zones = GetZones(result.MatrixT, result.Treshold);
+	            for (var z = 0; z < zones.Length; z++)
 	            {
-	                list.Add(task.ConsumersList[c]);
+	                var list = new List<string>();
+	                foreach (var c in zones[z])
+	                {
+	                    list.Add(task.ConsumersList[c]);
+	                }
+	                result.CommonResult[task.StationsList[z]] = list;
 	            }
-	            result.Result[task.StationsList[z]] = list;
 	        }
+	        else
+	        {
+	            result.MatrixT = result.MatrixW = new double[0, 0];
+	            result.Treshold = 0;
+	        }
+	        SolveConductions(task, result);
+            SolveDistances(task, result);
             return result;
 	    }
 
@@ -142,5 +152,51 @@ namespace Energy.Solving
 
 	        return result.Select(x => x.ToArray()).ToArray();
 	    }
-	}
+
+	    public static void SolveDistances(SimpleTask simpleTask, SimpleTaskSolveResult result)
+	    {
+	        var graph = simpleTask.Graph;
+
+            foreach (var station in simpleTask.StationsList)
+            {
+                var distances = graph
+                    .GetShortestDistances(station)
+                    .Where(i => simpleTask.ConsumersList.Contains(i.Key));
+
+                foreach (var distanceEntry in distances)
+                {
+                    var demand = simpleTask.ConsumersDistanceDemand[distanceEntry.Key];
+                    if (distanceEntry.Value.HasValue && distanceEntry.Value <= demand)
+                    {
+                        if (!result.DistanceResult.ContainsKey(station))
+                            result.DistanceResult[station] = new List<string>();
+                        result.DistanceResult[station].Add(distanceEntry.Key);
+                    }
+                }
+            }
+        }
+
+        public static void SolveConductions(SimpleTask simpleTask, SimpleTaskSolveResult result)
+        {
+            var graph = simpleTask.Graph;
+
+            foreach (var station in simpleTask.StationsList)
+            {
+                var conductions = graph
+                    .GetConductions(station)
+                    .Where(i => simpleTask.ConsumersList.Contains(i.Key));
+
+                foreach (var conductionEntry in conductions)
+                {
+                    var demand = simpleTask.ConsumersConductionDemand[conductionEntry.Key];
+                    if (conductionEntry.Value.HasValue && conductionEntry.Value >= demand)
+                    {
+                        if(!result.ConductionResult.ContainsKey(station))
+                            result.ConductionResult[station] = new List<string>();
+                        result.ConductionResult[station].Add(conductionEntry.Key);
+                    }
+                }
+            }
+        }
+    }
 }
